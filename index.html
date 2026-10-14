@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Refugio</title>
+<meta name="theme-color" content="#2f5d44">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Refugio">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<style>
+:root {
+  --bg: #eef0e6;
+  --surface: #f8f8f1;
+  --ink: #1f2a22;
+  --muted: #5d6b60;
+  --line: #d3d8c8;
+  --green: #2f5d44;
+  --green-ink: #f4f7ee;
+  --sun: #e8a33d;
+  --sun-soft: #f6dfae;
+  --danger: #9a4a3a;
+  --overlay: rgba(31, 42, 34, .55);
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17201b; --surface: #202c25; --ink: #e9eee2; --muted: #9fb0a3; --line: #33443a;
+    --green: #8cc3a0; --green-ink: #12201a; --sun: #f0b455; --sun-soft: #4a3a1c; --danger: #e08f7d;
+    --overlay: rgba(0, 0, 0, .65); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17201b; --surface: #202c25; --ink: #e9eee2; --muted: #9fb0a3; --line: #33443a;
+  --green: #8cc3a0; --green-ink: #12201a; --sun: #f0b455; --sun-soft: #4a3a1c; --danger: #e08f7d;
+  --overlay: rgba(0, 0, 0, .65); color-scheme: dark;
+}
+html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 17px; line-height: 1.55; }
+h1, h2, h3 { font-family: "Trebuchet MS", "Avenir Next", system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0; line-height: 1.1; letter-spacing: -.01em; }
+.app { max-width: 520px; margin: 0 auto; padding: 20px 18px 96px; }
+header.top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; gap: 10px; }
+header.top h1 { font-size: 26px; font-weight: 800; }
+header.top p { margin: 2px 0 0; font-size: 14px; color: var(--muted); }
+.tools { display: flex; gap: 6px; flex-shrink: 0; }
+.iconbtn { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 6px 12px; font: inherit; font-size: 14px; cursor: pointer; }
+
+.hello { font-family: "Trebuchet MS", "Avenir Next", system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 22px; font-weight: 700; margin: 14px 0 0; text-align: center; }
+
+.sunwrap { position: relative; margin: 6px auto 0; max-width: 360px; }
+.sunwrap svg { width: 100%; height: auto; display: block; overflow: visible; }
+.track { stroke: var(--line); }
+.prog { stroke: var(--sun); transition: stroke-dashoffset .9s ease; }
+.sundot { fill: var(--sun); }
+.sunglow { fill: var(--sun-soft); }
+.count { position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; }
+.count .n { font-family: "Trebuchet MS", "Avenir Next", system-ui, -apple-system, "Segoe UI", sans-serif; font-weight: 800; font-size: 76px; line-height: 1; }
+.count .l { color: var(--muted); font-size: 16px; margin-top: 2px; }
+.goalline { text-align: center; color: var(--muted); margin: 10px 0 0; font-size: 15px; }
+
+.week { display: flex; justify-content: center; gap: 10px; margin: 18px 0 4px; }
+.day { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); }
+.dot { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--line); }
+.dot.ok { background: var(--green); border-color: var(--green); }
+.dot.fail { border-color: var(--danger); position: relative; }
+.dot.fail::after { content: ""; position: absolute; inset: 6px 4px; border-top: 2px solid var(--danger); }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 18px 0; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 8px; text-align: center; }
+.stat b { display: block; font-family: "Trebuchet MS", "Avenir Next", system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 26px; }
+.stat span { font-size: 13px; color: var(--muted); }
+
+.btn { display: block; width: 100%; border: 0; border-radius: 16px; padding: 16px; font: inherit; font-weight: 700; font-size: 18px; cursor: pointer; }
+.btn.primary { background: var(--green); color: var(--green-ink); }
+.btn.sun { background: var(--sun); color: #2a1d05; }
+.btn.ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); font-weight: 400; font-size: 16px; padding: 12px; }
+.btn + .btn { margin-top: 10px; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+
+.verse { margin: 22px 0 0; padding: 14px 16px; border-left: 4px solid var(--sun); background: var(--surface); border-radius: 0 12px 12px 0; }
+.verse p { margin: 0; }
+.verse small { display: block; color: var(--muted); margin-top: 6px; }
+.verse button { background: none; border: 0; color: var(--green); font: inherit; font-size: 14px; padding: 8px 0 0; cursor: pointer; text-decoration: underline; }
+
+nav.tabs { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface); border-top: 1px solid var(--line); display: flex; justify-content: center; padding-bottom: env(safe-area-inset-bottom, 0px); }
+nav.tabs .in { display: flex; width: 100%; max-width: 520px; }
+nav.tabs button { flex: 1; background: none; border: 0; padding: 14px 4px; font: inherit; font-size: 15px; color: var(--muted); cursor: pointer; border-top: 3px solid transparent; }
+nav.tabs button[aria-selected="true"] { color: var(--ink); font-weight: 700; border-top-color: var(--sun); }
+
+section.view { display: none; }
+section.view.on { display: block; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 14px; }
+.card h2 { font-size: 20px; margin-bottom: 6px; }
+.hint { color: var(--muted); font-size: 15px; margin: 0 0 12px; }
+label.f { display: block; font-weight: 700; font-size: 15px; margin: 14px 0 6px; }
+textarea, input[type=text], input[type=date], input[type=password], select { width: 100%; font: inherit; background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+textarea { min-height: 90px; resize: vertical; }
+.row { display: flex; gap: 8px; margin-top: 8px; }
+.row .btn { padding: 12px; font-size: 16px; }
+ul.list { list-style: none; margin: 0; padding: 0; }
+ul.list li { display: flex; gap: 10px; align-items: flex-start; padding: 12px 0; border-top: 1px solid var(--line); }
+ul.list li:first-child { border-top: 0; }
+ul.list li p { margin: 0; flex: 1; white-space: pre-wrap; overflow-wrap: anywhere; }
+ul.list li time { display: block; font-size: 13px; color: var(--muted); }
+.x { background: none; border: 0; color: var(--muted); font-size: 22px; line-height: 1; cursor: pointer; padding: 0 4px; }
+.empty { color: var(--muted); padding: 8px 0; }
+.safe { display: flex; gap: 10px; align-items: flex-start; background: var(--sun-soft); border-radius: 12px; padding: 12px 14px; margin: 0 0 14px; font-size: 15px; }
+.safe b { white-space: nowrap; }
+
+.overlay { position: fixed; inset: 0; background: var(--overlay); display: none; align-items: flex-end; justify-content: center; z-index: 20; }
+.overlay.on { display: flex; }
+.overlay.lock { z-index: 40; align-items: center; background: var(--bg); }
+.overlay.lock .sheet { border-radius: 22px; text-align: center; }
+.sheet { background: var(--bg); width: 100%; max-width: 520px; max-height: 94%; overflow-y: auto; border-radius: 22px 22px 0 0; padding: 22px 18px calc(22px + env(safe-area-inset-bottom, 0px)); }
+.sheet h2 { font-size: 26px; margin-bottom: 6px; }
+.breath { width: 150px; height: 150px; margin: 18px auto; border-radius: 50%; background: var(--sun-soft); border: 3px solid var(--sun); display: flex; align-items: center; justify-content: center; font-family: "Trebuchet MS", "Avenir Next", system-ui, -apple-system, "Segoe UI", sans-serif; font-weight: 700; animation: breathe 10s ease-in-out infinite; }
+@keyframes breathe { 0%, 100% { transform: scale(.7); } 40% { transform: scale(1.05); } }
+@media (prefers-reduced-motion: reduce) { .breath { animation: none; } .prog { transition: none; } }
+.timer { text-align: center; font-family: "Trebuchet MS", "Avenir Next", system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 40px; font-weight: 800; }
+.steps { margin: 14px 0; padding-left: 20px; }
+.steps li { margin-bottom: 6px; }
+.myreasons { background: var(--surface); border-radius: 12px; padding: 12px 14px; margin: 12px 0; }
+.myreasons p { margin: 0 0 6px; }
+.myreasons p:last-child { margin: 0; }
+.faithline { font-style: italic; }
+.center { text-align: center; }
+.small { font-size: 14px; color: var(--muted); }
+.pin { text-align: center; letter-spacing: .5em; font-size: 28px; max-width: 220px; margin: 14px auto; display: block; }
+.err { color: var(--danger); min-height: 1.4em; margin: 0; font-size: 15px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div>
+      <h1>Refugio</h1>
+      <p data-i18n="tagline"></p>
+    </div>
+    <div class="tools">
+      <button class="iconbtn" id="langBtn" type="button" aria-label="Cambiar idioma / Change language">English</button>
+      <button class="iconbtn" id="themeBtn" type="button" data-i18n="theme" data-i18n-aria="themeAria"></button>
+    </div>
+  </header>
+
+  <!-- HOY -->
+  <section class="view on" id="v-hoy">
+    <div id="welcome" class="card" hidden>
+      <h2 data-i18n="wTitle"></h2>
+      <p class="hint" data-i18n="wHint"></p>
+      <div class="safe"><b data-i18n="wSafeB"></b><span data-i18n="wSafe"></span></div>
+
+      <label class="f" for="nameIn" data-i18n="nameLbl"></label>
+      <input type="text" id="nameIn" maxlength="30" autocomplete="off" data-i18n-ph="namePh">
+
+      <label class="f" for="faithIn" data-i18n="faithLbl"></label>
+      <select id="faithIn"></select>
+
+      <label class="f" for="startDate" data-i18n="startLbl"></label>
+      <input type="date" id="startDate">
+      <p class="small" data-i18n="startNote"></p>
+
+      <div class="row"><button class="btn primary" id="startBtn" type="button" data-i18n="startBtn"></button></div>
+    </div>
+
+    <div id="dash" hidden>
+      <p class="hello" id="hello"></p>
+      <div class="sunwrap">
+        <svg viewBox="0 0 300 170" aria-hidden="true">
+          <circle class="sunglow" id="glow" cx="150" cy="150" r="0" opacity=".7"/>
+          <path class="track" d="M 30 150 A 120 120 0 0 1 270 150" fill="none" stroke-width="12" stroke-linecap="round"/>
+          <path class="prog" id="prog" d="M 30 150 A 120 120 0 0 1 270 150" fill="none" stroke-width="12" stroke-linecap="round"/>
+          <circle class="sundot" id="dot" cx="30" cy="150" r="13"/>
+        </svg>
+        <div class="count"><div class="n" id="days">0</div><div class="l" id="daysLbl"></div></div>
+      </div>
+      <p class="goalline" id="goalLine"></p>
+
+      <div class="week" id="week"></div>
+
+      <div class="stats">
+        <div class="stat"><b id="best">0</b><span data-i18n="best"></span></div>
+        <div class="stat"><b id="urges">0</b><span data-i18n="urges"></span></div>
+        <div class="stat"><b id="relapses">0</b><span data-i18n="relapses"></span></div>
+      </div>
+
+      <button class="btn sun" id="urgeBtn" type="button" data-i18n="urgeBtn"></button>
+      <button class="btn ghost" id="relapseBtn" type="button" data-i18n="relapseBtn"></button>
+
+      <div class="verse">
+        <p id="phraseText"></p>
+        <small id="phraseRef"></small>
+        <button type="button" id="phraseNext" data-i18n="phraseNext"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RAZONES -->
+  <section class="view" id="v-razones">
+    <div class="card">
+      <h2 data-i18n="reasonsT"></h2>
+      <p class="hint" data-i18n="reasonsHint"></p>
+      <textarea id="reasonIn" data-i18n-ph="reasonPh" data-i18n-aria="reasonAria"></textarea>
+      <div class="row"><button class="btn primary" id="addReason" type="button" data-i18n="reasonSave"></button></div>
+    </div>
+    <div class="card"><ul class="list" id="reasonList"></ul></div>
+  </section>
+
+  <!-- DIARIO -->
+  <section class="view" id="v-diario">
+    <div class="card">
+      <h2 data-i18n="diaryT"></h2>
+      <p class="hint" data-i18n="diaryHint"></p>
+      <textarea id="noteIn" data-i18n-ph="notePh" data-i18n-aria="noteAria"></textarea>
+      <div class="row"><button class="btn primary" id="addNote" type="button" data-i18n="noteSave"></button></div>
+    </div>
+    <div class="card"><ul class="list" id="noteList"></ul></div>
+  </section>
+
+  <!-- PLAN -->
+  <section class="view" id="v-plan">
+    <div class="card">
+      <h2 data-i18n="planT"></h2>
+      <p class="hint" data-i18n="planHint"></p>
+      <ul class="steps">
+        <li><b data-i18n="plan1b"></b> <span data-i18n="plan1"></span></li>
+        <li><b data-i18n="plan2b"></b> <span data-i18n="plan2"></span></li>
+        <li><b data-i18n="plan3b"></b> <span data-i18n="plan3"></span></li>
+        <li><b data-i18n="plan4b"></b> <span data-i18n="plan4"></span></li>
+        <li><b data-i18n="plan5b"></b> <span id="supportTxt"></span></li>
+        <li><b data-i18n="plan6b"></b> <span data-i18n="plan6"></span></li>
+      </ul>
+      <p class="small" data-i18n="planHelp"></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="setT"></h2>
+      <label class="f" for="setName" data-i18n="setNameLbl"></label>
+      <input type="text" id="setName" maxlength="30" autocomplete="off">
+      <label class="f" for="setFaith" data-i18n="setFaithLbl"></label>
+      <select id="setFaith"></select>
+      <div class="row"><button class="btn primary" id="saveSet" type="button" data-i18n="setSave"></button></div>
+      <p class="small" id="setMsg" role="status"></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="pinT"></h2>
+      <p class="hint" data-i18n="pinHint"></p>
+      <input type="password" id="pinSet" inputmode="numeric" maxlength="4" class="pin" placeholder="••••" data-i18n-aria="pinAria">
+      <div class="row">
+        <button class="btn primary" id="pinSave" type="button"></button>
+        <button class="btn ghost" id="pinOff" type="button" data-i18n="pinOff"></button>
+      </div>
+      <p class="small" id="pinMsg" role="status"></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="dataT"></h2>
+      <p class="hint" data-i18n="dataHint"></p>
+      <button class="btn ghost" id="wipeBtn" type="button" data-i18n="wipeBtn"></button>
+    </div>
+  </section>
+</div>
+
+<nav class="tabs" data-i18n-aria="tabsAria">
+  <div class="in" role="tablist">
+    <button role="tab" aria-selected="true" data-v="hoy" type="button" data-i18n="tabHoy"></button>
+    <button role="tab" aria-selected="false" data-v="razones" type="button" data-i18n="tabReasons"></button>
+    <button role="tab" aria-selected="false" data-v="diario" type="button" data-i18n="tabDiary"></button>
+    <button role="tab" aria-selected="false" data-v="plan" type="button" data-i18n="tabPlan"></button>
+  </div>
+</nav>
+
+<!-- MOMENTO DIFÍCIL -->
+<div class="overlay" id="urgeOv" role="dialog" aria-modal="true" aria-labelledby="urgeTitle">
+  <div class="sheet">
+    <h2 id="urgeTitle"></h2>
+    <p class="hint" data-i18n="urgeHint"></p>
+    <div class="timer" id="timer">10:00</div>
+    <div class="breath" aria-hidden="true" data-i18n="breathe"></div>
+    <p class="center small" data-i18n="breatheNote"></p>
+    <ol class="steps">
+      <li data-i18n="urge1"></li>
+      <li data-i18n="urge2"></li>
+      <li data-i18n="urge3"></li>
+      <li id="urgeAct"></li>
+    </ol>
+    <div class="myreasons" id="urgeFaith"></div>
+    <div class="myreasons" id="urgeReasons"></div>
+    <button class="btn primary" id="urgeDone" type="button" data-i18n="urgeDone"></button>
+    <button class="btn ghost" id="urgeClose" type="button" data-i18n="urgeClose"></button>
+  </div>
+</div>
+
+<!-- CONFIRMAR -->
+<div class="overlay" id="confOv" role="dialog" aria-modal="true" aria-labelledby="confTitle">
+  <div class="sheet">
+    <h2 id="confTitle"></h2>
+    <p id="confText" class="hint"></p>
+    <button class="btn primary" id="confYes" type="button"></button>
+    <button class="btn ghost" id="confNo" type="button" data-i18n="confNo"></button>
+  </div>
+</div>
+
+<!-- BLOQUEO -->
+<div class="overlay lock" id="lockOv" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
+  <div class="sheet">
+    <h2 id="lockTitle">Refugio</h2>
+    <p class="hint" data-i18n="lockHint"></p>
+    <input type="password" id="lockIn" inputmode="numeric" maxlength="4" class="pin" placeholder="••••" data-i18n-aria="pinAria">
+    <p class="err" id="lockErr" role="alert"></p>
+    <button class="btn primary" id="lockGo" type="button" data-i18n="lockEnter"></button>
+    <button class="btn ghost" id="lockForgot" type="button" data-i18n="lockForgot"></button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var KEY = "refugio-v1", OLD = "amanecer-v1", SALT = "rf26";
+  var MILESTONES = [7, 14, 30, 60, 90, 180, 365];
+
+  /* ================= TEXTOS / TEXTS ================= */
+  var L = {
+    es: {
+      tagline: "Un espacio seguro, privado y sin juicios.",
+      theme: "Tema", themeAria: "Cambiar entre tema claro y oscuro",
+      wTitle: "Te damos la bienvenida",
+      wHint: "Aquí nadie te juzga. Esta app es para hombres y mujeres que quieren recuperar el control de su vida, a su ritmo.",
+      wSafeB: "Privado.", wSafe: "Sin cuenta, sin anuncios. Todo se queda en tu dispositivo y nadie más puede verlo.",
+      nameLbl: "¿Cómo te gustaría que te llamemos?", namePh: "Tu nombre, un apodo o lo que prefieras",
+      faithLbl: "¿Quieres frases de tu fe?",
+      startLbl: "¿Desde qué día empiezas?", startNote: "Si hoy es tu primer día, déjalo como está.",
+      startBtn: "Empezar mi camino",
+      dayOne: "día", dayMany: "días",
+      best: "mejor racha", urges: "impulsos superados", relapses: "reinicios",
+      urgeBtn: "Estoy pasando un momento difícil", relapseBtn: "Tuve un tropiezo",
+      phraseNext: "Otra frase",
+      tabHoy: "Hoy", tabReasons: "Razones", tabDiary: "Diario", tabPlan: "Plan", tabsAria: "Secciones",
+      reasonsT: "Mis razones", reasonsHint: "Escribe por qué quieres cambiar. Las verás justo en el momento difícil.",
+      reasonPh: "Ej.: Quiero estar más presente con las personas que amo.", reasonAria: "Nueva razón",
+      reasonSave: "Guardar razón", reasonEmpty: "Aún no hay razones. Escribe la primera arriba.",
+      diaryT: "Diario", diaryHint: "¿Cómo te sientes hoy? ¿Qué provocó el impulso? Anotarlo ayuda a reconocer patrones. Nadie más lo lee.",
+      notePh: "Escribe aquí…", noteAria: "Nueva nota", noteSave: "Guardar nota", noteEmpty: "Aún no hay notas.",
+      planT: "Mi plan", planHint: "Lo que más ayuda es decidir antes, no durante el impulso.",
+      plan1b: "Cambia de lugar.", plan1: "Sal de la habitación, ve a un espacio con gente o al aire libre.",
+      plan2b: "Quita el acceso.", plan2: "Instala un bloqueador de contenido en tu teléfono y computadora, y deja el celular fuera de la cama por la noche.",
+      plan3b: "Conoce tus disparadores.", plan3: "Aburrimiento, soledad, cansancio y estrés son los más comunes.",
+      plan4b: "Muévete.", plan4: "Caminar, hacer ejercicio o darte una ducha tibia ayuda a bajar la intensidad.",
+      plan5b: "Habla con alguien.",
+      plan6b: "Cuida tu sueño.", plan6: "Dormir bien reduce mucho el riesgo de recaer.",
+      planHelp: "Si sientes que no puedes solo o sola, un psicólogo o un grupo de apoyo pueden marcar una gran diferencia. Pedir ayuda es una muestra de valentía.",
+      setT: "Mis ajustes", setNameLbl: "¿Cómo te llamamos?", setFaithLbl: "Frases de mi fe",
+      setSave: "Guardar cambios", setSaved: "Cambios guardados.",
+      pinT: "Bloqueo con PIN", pinHint: "Si lo activas, la app pide un PIN de 4 números cada vez que se abre. Así nadie más puede entrar.",
+      pinAria: "PIN de 4 números", pinOn: "Activar PIN", pinChange: "Cambiar PIN", pinOff: "Quitar PIN",
+      pinBad: "El PIN debe tener exactamente 4 números.", pinSaved: "PIN activado. Se pedirá cada vez que abras la app.", pinRemoved: "PIN desactivado.",
+      dataT: "Mis datos", dataHint: "Todo se guarda solo en este dispositivo.", wipeBtn: "Borrar todo y empezar de cero",
+      urgeHint: "Un impulso suele alcanzar su punto máximo y bajar en 10 a 20 minutos. No tienes que ganar para siempre, solo estos minutos.",
+      urgeTitle: "Respira. Esto pasa.", urgeTitleN: "Respira, {n}. Esto pasa.",
+      breathe: "Respira", breatheNote: "Inhala por la nariz 4 segundos. Exhala lento 6 segundos.",
+      urge1: "Levántate y sal de donde estás.", urge2: "Toma un vaso de agua.", urge3: "Camina o haz 20 flexiones.",
+      remindWhy: "Recuerda por qué lo haces:", remindNone: "Cuando puedas, escribe tus razones en la pestaña Razones. Aquí te las mostraré.",
+      urgeDone: "Ya pasó, lo superé", urgeClose: "Cerrar", confNo: "Cancelar",
+      wipeT: "¿Borrar todo?", wipeTxt: "Se eliminarán tu contador, razones, diario y ajustes de este dispositivo. No se puede deshacer.", wipeYes: "Sí, borrar",
+      relT: "Está bien. Levántate", relTN: "Está bien, {n}. Levántate",
+      relTxt: "Un tropiezo no te define. Tu mejor racha se conserva y el contador vuelve a empezar hoy. Lo importante es seguir.", relYes: "Reiniciar y seguir",
+      lockHint: "Escribe tu PIN para entrar.", lockEnter: "Entrar", lockErr: "PIN incorrecto. Inténtalo otra vez.", lockForgot: "Olvidé mi PIN",
+      forgotT: "¿Olvidaste tu PIN?", forgotTxt: "Por tu seguridad, la única forma de entrar es borrar todos los datos de la app y empezar de cero.", forgotYes: "Borrar y empezar de cero",
+      morning: "Buenos días", afternoon: "Buenas tardes", night: "Buenas noches",
+      goalReached: "¡Meta de {g} días alcanzada! Sigue adelante.", goalNext: "Próxima meta: {g} días. Te faltan {left}.",
+      weekAria: "Últimos 7 días", delAria: "Eliminar",
+      langBtn: "English", weekDays: ["D", "L", "M", "X", "J", "V", "S"], locale: "es"
+    },
+    en: {
+      tagline: "A safe, private space with no judgment.",
+      theme: "Theme", themeAria: "Switch between light and dark theme",
+      wTitle: "Welcome",
+      wHint: "No one judges you here. This app is for men and women who want to take back control of their lives, at their own pace.",
+      wSafeB: "Private.", wSafe: "No account, no ads. Everything stays on your device and no one else can see it.",
+      nameLbl: "What would you like us to call you?", namePh: "Your name, a nickname, or whatever you prefer",
+      faithLbl: "Would you like phrases from your faith?",
+      startLbl: "Which day are you starting from?", startNote: "If today is your first day, leave it as it is.",
+      startBtn: "Start my journey",
+      dayOne: "day", dayMany: "days",
+      best: "best streak", urges: "urges overcome", relapses: "restarts",
+      urgeBtn: "I'm having a hard moment", relapseBtn: "I stumbled",
+      phraseNext: "Another phrase",
+      tabHoy: "Today", tabReasons: "Reasons", tabDiary: "Journal", tabPlan: "Plan", tabsAria: "Sections",
+      reasonsT: "My reasons", reasonsHint: "Write why you want to change. You'll see them right when things get hard.",
+      reasonPh: "E.g.: I want to be more present with the people I love.", reasonAria: "New reason",
+      reasonSave: "Save reason", reasonEmpty: "No reasons yet. Write the first one above.",
+      diaryT: "Journal", diaryHint: "How are you feeling today? What triggered the urge? Writing it down helps you spot patterns. No one else reads it.",
+      notePh: "Write here…", noteAria: "New note", noteSave: "Save note", noteEmpty: "No notes yet.",
+      planT: "My plan", planHint: "What helps most is deciding ahead of time, not in the middle of an urge.",
+      plan1b: "Change your surroundings.", plan1: "Leave the room, go somewhere with people, or step outside.",
+      plan2b: "Remove access.", plan2: "Install a content blocker on your phone and computer, and keep your phone out of bed at night.",
+      plan3b: "Know your triggers.", plan3: "Boredom, loneliness, tiredness and stress are the most common.",
+      plan4b: "Move.", plan4: "Walking, exercising or taking a warm shower helps lower the intensity.",
+      plan5b: "Talk to someone.",
+      plan6b: "Protect your sleep.", plan6: "Sleeping well greatly lowers the risk of relapse.",
+      planHelp: "If you feel you can't do it alone, a therapist or support group can make a big difference. Asking for help takes courage.",
+      setT: "My settings", setNameLbl: "What should we call you?", setFaithLbl: "Phrases from my faith",
+      setSave: "Save changes", setSaved: "Changes saved.",
+      pinT: "PIN lock", pinHint: "If you turn it on, the app asks for a 4-digit PIN every time it opens. That way no one else can get in.",
+      pinAria: "4-digit PIN", pinOn: "Turn on PIN", pinChange: "Change PIN", pinOff: "Remove PIN",
+      pinBad: "The PIN must be exactly 4 digits.", pinSaved: "PIN turned on. It will be asked every time you open the app.", pinRemoved: "PIN turned off.",
+      dataT: "My data", dataHint: "Everything is stored only on this device.", wipeBtn: "Delete everything and start over",
+      urgeHint: "An urge usually peaks and fades within 10 to 20 minutes. You don't have to win forever, just these minutes.",
+      urgeTitle: "Breathe. This will pass.", urgeTitleN: "Breathe, {n}. This will pass.",
+      breathe: "Breathe", breatheNote: "Inhale through your nose for 4 seconds. Exhale slowly for 6 seconds.",
+      urge1: "Stand up and leave where you are.", urge2: "Drink a glass of water.", urge3: "Take a walk or do 20 push-ups.",
+      remindWhy: "Remember why you're doing this:", remindNone: "When you can, write your reasons in the Reasons tab. I'll show them to you here.",
+      urgeDone: "It passed, I made it", urgeClose: "Close", confNo: "Cancel",
+      wipeT: "Delete everything?", wipeTxt: "Your counter, reasons, journal and settings will be erased from this device. This can't be undone.", wipeYes: "Yes, delete",
+      relT: "It's okay. Get back up.", relTN: "It's okay, {n}. Get back up.",
+      relTxt: "A stumble doesn't define you. Your best streak is kept and the counter starts again today. What matters is to keep going.", relYes: "Restart and keep going",
+      lockHint: "Enter your PIN to open the app.", lockEnter: "Open", lockErr: "Wrong PIN. Try again.", lockForgot: "I forgot my PIN",
+      forgotT: "Forgot your PIN?", forgotTxt: "For your security, the only way back in is to erase all app data and start over.", forgotYes: "Erase and start over",
+      morning: "Good morning", afternoon: "Good afternoon", night: "Good evening",
+      goalReached: "{g}-day goal reached! Keep going.", goalNext: "Next goal: {g} days. {left} to go.",
+      weekAria: "Last 7 days", delAria: "Delete",
+      langBtn: "Español", weekDays: ["S", "M", "T", "W", "T", "F", "S"], locale: "en"
+    }
+  };
+
+  /* ================= FE / FAITH ================= */
+  var FAITHS = {
+    cristiana: {
+      label: { es: "Cristiana (Biblia)", en: "Christian (Bible)" },
+      act: { es: "Haz una oración corta o lee un salmo.", en: "Say a short prayer or read a psalm." },
+      support: { es: "Busca a un pastor, a tu grupo de oración o a un amigo de confianza en tu iglesia.", en: "Reach out to a pastor, your prayer group, or a trusted friend at church." },
+      phrases: [
+        { es: ["Todo lo puedo en Cristo que me fortalece.", "Filipenses 4:13"], en: ["I can do all things through Christ who strengthens me.", "Philippians 4:13"] },
+        { es: ["No temas, {n}, porque yo estoy contigo.", "Basado en Isaías 41:10"], en: ["Do not fear, {n}, for I am with you.", "Based on Isaiah 41:10"] },
+        { es: ["Dios es fiel y no permitirá una prueba mayor que tus fuerzas; siempre abre una salida.", "Basado en 1 Corintios 10:13"], en: ["God is faithful; he will not allow a trial beyond your strength, and he always provides a way out.", "Based on 1 Corinthians 10:13"] },
+        { es: ["Crea en mí, oh Dios, un corazón limpio.", "Salmo 51:10"], en: ["Create in me a clean heart, O God.", "Psalm 51:10"] },
+        { es: ["Las misericordias de Dios son nuevas cada mañana.", "Basado en Lamentaciones 3:22-23"], en: ["God's mercies are new every morning.", "Based on Lamentations 3:22-23"] },
+        { es: ["Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.", "Mateo 11:28"], en: ["Come to me, all who are weary and burdened, and I will give you rest.", "Matthew 11:28"] },
+        { es: ["Siete veces cae el justo, y vuelve a levantarse.", "Proverbios 24:16"], en: ["The righteous may fall seven times, and rise again.", "Proverbs 24:16"] }
+      ]
+    },
+    catolica: {
+      label: { es: "Católica", en: "Catholic" },
+      act: { es: "Reza un Ave María o un Padre Nuestro y pon tu lucha en manos de Dios.", en: "Pray a Hail Mary or an Our Father and place your struggle in God's hands." },
+      support: { es: "Habla con un sacerdote, acude a la confesión o únete a un grupo de tu parroquia.", en: "Talk with a priest, go to confession, or join a parish group." },
+      phrases: [
+        { es: ["Todo lo puedo en Cristo que me fortalece.", "Filipenses 4:13"], en: ["I can do all things through Christ who strengthens me.", "Philippians 4:13"] },
+        { es: ["Crea en mí, oh Dios, un corazón puro.", "Salmo 51:12"], en: ["Create in me a pure heart, O God.", "Psalm 51:12"] },
+        { es: ["La confesión es un nuevo comienzo: Dios te recibe sin juzgarte, {n}.", ""], en: ["Confession is a fresh start: God welcomes you without judging you, {n}.", ""] },
+        { es: ["Las misericordias de Dios son nuevas cada mañana.", "Basado en Lamentaciones 3:22-23"], en: ["God's mercies are new every morning.", "Based on Lamentations 3:22-23"] },
+        { es: ["Pon tu lucha en manos de la Virgen María y pide su ayuda hoy.", ""], en: ["Place your struggle in the hands of the Virgin Mary and ask for her help today.", ""] },
+        { es: ["Dios es fiel y no permitirá una prueba mayor que tus fuerzas.", "Basado en 1 Corintios 10:13"], en: ["God is faithful and will not allow a trial beyond your strength.", "Based on 1 Corinthians 10:13"] },
+        { es: ["Un tropiezo no te aleja de Dios; volver a Él es siempre posible.", ""], en: ["A stumble does not take you away from God; returning to Him is always possible.", ""] }
+      ]
+    },
+    islam: {
+      label: { es: "Musulmana (Islam)", en: "Muslim (Islam)" },
+      act: { es: "Haz wudu y reza, o recita un dhikr o una dua con calma.", en: "Make wudu and pray, or recite a dhikr or dua calmly." },
+      support: { es: "Habla con un imán, con una persona de confianza de tu comunidad o con alguien que te acompañe.", en: "Talk with an imam, a trusted person in your community, or someone who can walk with you." },
+      phrases: [
+        { es: ["Con la dificultad viene la facilidad.", "Basado en el Corán 94:5-6"], en: ["With hardship comes ease.", "Based on the Quran 94:5-6"] },
+        { es: ["Allah no exige a nadie más de lo que puede soportar.", "Basado en el Corán 2:286"], en: ["Allah does not burden anyone beyond what they can bear.", "Based on the Quran 2:286"] },
+        { es: ["No desesperes de la misericordia de Allah, {n}.", "Basado en el Corán 39:53"], en: ["Do not despair of Allah's mercy, {n}.", "Based on the Quran 39:53"] },
+        { es: ["Con el recuerdo de Allah los corazones encuentran paz.", "Basado en el Corán 13:28"], en: ["In the remembrance of Allah, hearts find peace.", "Based on the Quran 13:28"] },
+        { es: ["Cuidar la mirada y la pureza es un acto de adoración, para hombres y mujeres.", "Basado en el Corán 24:30-31"], en: ["Guarding your gaze and your purity is an act of worship, for men and women alike.", "Based on the Quran 24:30-31"] },
+        { es: ["Todo ser humano se equivoca, y los mejores son los que se arrepienten.", "Hadiz (Tirmidhi)"], en: ["Every human being makes mistakes, and the best are those who repent.", "Hadith (Tirmidhi)"] }
+      ]
+    },
+    judia: {
+      label: { es: "Judía", en: "Jewish" },
+      act: { es: "Recita un salmo o una breve oración, o pronuncia el Shemá.", en: "Recite a psalm or a short prayer, or say the Shema." },
+      support: { es: "Habla con un rabino, con un amigo de confianza o con tu comunidad.", en: "Talk with a rabbi, a trusted friend, or your community." },
+      phrases: [
+        { es: ["Siete veces cae el justo, y vuelve a levantarse.", "Proverbios 24:16"], en: ["The righteous may fall seven times, and rise again.", "Proverbs 24:16"] },
+        { es: ["Crea en mí, oh Dios, un corazón puro.", "Salmo 51"], en: ["Create in me a pure heart, O God.", "Psalm 51"] },
+        { es: ["Teshuvá: volver siempre es posible, {n}. Cada día es un nuevo comienzo.", ""], en: ["Teshuvah: returning is always possible, {n}. Every day is a new beginning.", ""] },
+        { es: ["No te toca terminar la obra, pero tampoco eres libre de abandonarla.", "Basado en Pirké Avot 2:16"], en: ["You are not required to finish the work, but you are not free to abandon it.", "Based on Pirkei Avot 2:16"] },
+        { es: ["Cuidar tu mente y tu mirada también es una forma de santificar tu vida.", ""], en: ["Guarding your mind and your gaze is also a way of sanctifying your life.", ""] },
+        { es: ["Un tropiezo no te define; lo que haces después, sí.", ""], en: ["A stumble does not define you; what you do next does.", ""] }
+      ]
+    },
+    espiritual: {
+      label: { es: "Espiritual (sin religión específica)", en: "Spiritual (no specific religion)" },
+      act: { es: "Cierra los ojos, medita dos minutos y agradece algo.", en: "Close your eyes, meditate for two minutes, and give thanks for something." },
+      support: { es: "Habla con un guía espiritual, un amigo cercano o una persona que te inspire confianza.", en: "Talk with a spiritual guide, a close friend, or someone you trust." },
+      phrases: [
+        { es: ["Eres más grande que cualquier impulso, {n}.", ""], en: ["You are greater than any urge, {n}.", ""] },
+        { es: ["La paz que buscas empieza en una decisión pequeña de hoy.", ""], en: ["The peace you seek begins with one small decision today.", ""] },
+        { es: ["Respira. Estás a salvo, estás acompañado y esto va a pasar.", ""], en: ["Breathe. You are safe, you are supported, and this will pass.", ""] },
+        { es: ["Tu cuerpo y tu mente son un templo. Cuídalos con cariño.", ""], en: ["Your body and mind are a temple. Care for them with kindness.", ""] },
+        { es: ["La gratitud calma el deseo. Piensa en tres cosas buenas de hoy.", ""], en: ["Gratitude calms desire. Think of three good things from today.", ""] },
+        { es: ["Cada vez que eliges bien, tu espíritu se fortalece.", ""], en: ["Every time you choose well, your spirit grows stronger.", ""] }
+      ]
+    },
+    ninguna: {
+      label: { es: "Sin enfoque religioso", en: "No religious focus" },
+      act: { es: "Escribe cómo te sientes o llama a alguien de confianza.", en: "Write down how you feel or call someone you trust." },
+      support: { es: "Habla con un amigo, tu pareja, un familiar o un terapeuta.", en: "Talk to a friend, your partner, a family member, or a therapist." },
+      phrases: [
+        { es: ["No se trata de no sentir el impulso, sino de no obedecerlo.", ""], en: ["It's not about never feeling the urge, but about not obeying it.", ""] },
+        { es: ["Cada día que eliges bien, te fortaleces, {n}.", ""], en: ["Every day you choose well, you grow stronger, {n}.", ""] },
+        { es: ["Una recaída no borra tu progreso. Aprende de ella y sigue.", ""], en: ["A relapse doesn't erase your progress. Learn from it and keep going.", ""] },
+        { es: ["Tu yo de dentro de un año te agradecerá lo que haces hoy.", ""], en: ["Your future self a year from now will thank you for what you do today.", ""] },
+        { es: ["La disciplina es una forma de amor propio.", ""], en: ["Discipline is a form of self-love.", ""] },
+        { es: ["Hoy solo tienes que ganar hoy.", ""], en: ["Today you only have to win today.", ""] },
+        { es: ["Pedir ayuda no es debilidad, es estrategia.", ""], en: ["Asking for help isn't weakness, it's strategy.", ""] }
+      ]
+    }
+  };
+  var FAITH_ORDER = ["cristiana", "catolica", "islam", "judia", "espiritual", "ninguna"];
+
+  var state = { start: null, best: 0, relapses: [], urges: 0, reasons: [], notes: [], name: "", faith: "ninguna", pin: "", phraseIdx: 0, lang: "" };
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY) || localStorage.getItem(OLD);
+      if (raw) { var s = JSON.parse(raw); for (var k in state) if (s[k] !== undefined) state[k] = s[k]; }
+    } catch (e) {}
+    if (!FAITHS[state.faith]) state.faith = "ninguna";
+    if (state.lang !== "es" && state.lang !== "en") {
+      var nav = (navigator.language || "es").toLowerCase();
+      state.lang = nav.indexOf("es") === 0 ? "es" : "en";
+    }
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function hashPin(p) { var x = 5381, s = SALT + p; for (var i = 0; i < s.length; i++) x = ((x << 5) + x + s.charCodeAt(i)) | 0; return String(x >>> 0); }
+
+  function $(id) { return document.getElementById(id); }
+  function t(key, vars) {
+    var s = (L[state.lang] && L[state.lang][key]);
+    if (s === undefined) s = L.es[key] || key;
+    if (typeof s === "string" && vars) { for (var k in vars) s = s.replace(new RegExp("\\{" + k + "\\}", "g"), vars[k]); }
+    return s;
+  }
+  function nm() { return (state.name || "").trim(); }
+  function withName(txt) {
+    return nm() ? txt.replace(/\{n\}/g, nm()) : txt.replace(/, \{n\}/g, "").replace(/ \{n\}/g, "").replace(/\{n\}/g, "");
+  }
+
+  function iso(d) { var m = d.getMonth() + 1, day = d.getDate(); return d.getFullYear() + "-" + (m < 10 ? "0" : "") + m + "-" + (day < 10 ? "0" : "") + day; }
+  function parse(s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function daysBetween(a, b) { return Math.round((parse(iso(b)) - parse(iso(a))) / 864e5); }
+  function streak() { return state.start ? Math.max(0, daysBetween(parse(state.start), new Date())) : 0; }
+  function fmtDate(s) { try { return new Date(s).toLocaleDateString(t("locale"), { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }); } catch (e) { return s; } }
+
+  /* ---------- aplicar idioma ---------- */
+  function fillFaith(sel, value) {
+    sel.innerHTML = "";
+    FAITH_ORDER.forEach(function (k) { var o = document.createElement("option"); o.value = k; o.textContent = FAITHS[k].label[state.lang]; sel.appendChild(o); });
+    sel.value = value;
+  }
+  function applyStatic() {
+    document.documentElement.lang = state.lang;
+    document.querySelectorAll("[data-i18n]").forEach(function (el) { el.textContent = t(el.getAttribute("data-i18n")); });
+    document.querySelectorAll("[data-i18n-ph]").forEach(function (el) { el.setAttribute("placeholder", t(el.getAttribute("data-i18n-ph"))); });
+    document.querySelectorAll("[data-i18n-aria]").forEach(function (el) { el.setAttribute("aria-label", t(el.getAttribute("data-i18n-aria"))); });
+    $("langBtn").textContent = t("langBtn");
+    $("week").setAttribute("aria-label", t("weekAria"));
+  }
+  function applyLang() {
+    applyStatic();
+    fillFaith($("faithIn"), $("faithIn").value || state.faith);
+    fillFaith($("setFaith"), state.faith);
+    render(); renderReasons(); renderNotes(); syncSettings();
+  }
+
+  /* ---------- frases ---------- */
+  function showPhrase() {
+    var list = FAITHS[state.faith].phrases;
+    var i = ((state.phraseIdx % list.length) + list.length) % list.length;
+    var p = list[i][state.lang];
+    $("phraseText").textContent = withName(p[0]);
+    $("phraseRef").textContent = p[1];
+    $("phraseRef").style.display = p[1] ? "block" : "none";
+  }
+
+  /* ---------- Hoy ---------- */
+  function greeting() {
+    var h = new Date().getHours();
+    var g = h < 12 ? t("morning") : (h < 19 ? t("afternoon") : t("night"));
+    return nm() ? g + ", " + nm() : g;
+  }
+  function render() {
+    var has = !!state.start;
+    $("welcome").hidden = has;
+    $("dash").hidden = !has;
+    $("supportTxt").textContent = FAITHS[state.faith].support[state.lang];
+    if (!has) { $("startDate").value = $("startDate").value || iso(new Date()); $("startDate").max = iso(new Date()); return; }
+
+    $("hello").textContent = greeting();
+    var n = streak();
+    if (n > state.best) { state.best = n; save(); }
+    $("days").textContent = n;
+    $("daysLbl").textContent = n === 1 ? t("dayOne") : t("dayMany");
+    $("best").textContent = state.best;
+    $("urges").textContent = state.urges;
+    $("relapses").textContent = state.relapses.length;
+
+    var goal = MILESTONES[MILESTONES.length - 1];
+    for (var i = 0; i < MILESTONES.length; i++) { if (MILESTONES[i] > n) { goal = MILESTONES[i]; break; } }
+    var frac = Math.min(1, n / goal);
+    var prog = $("prog"), len = prog.getTotalLength();
+    prog.style.strokeDasharray = len;
+    prog.style.strokeDashoffset = len * (1 - frac);
+    var ang = Math.PI * (1 - frac);
+    var cx = 150 + 120 * Math.cos(ang), cy = 150 - 120 * Math.sin(ang);
+    $("dot").setAttribute("cx", cx); $("dot").setAttribute("cy", cy);
+    $("glow").setAttribute("cx", cx); $("glow").setAttribute("cy", cy);
+    $("glow").setAttribute("r", 18 + frac * 14);
+    $("goalLine").textContent = n >= goal ? t("goalReached", { g: goal }) : t("goalNext", { g: goal, left: goal - n });
+
+    var wk = $("week"); wk.innerHTML = "";
+    var names = t("weekDays");
+    for (var d = 6; d >= 0; d--) {
+      var dt = new Date(); dt.setDate(dt.getDate() - d);
+      var key = iso(dt), cls = "dot";
+      if (state.relapses.indexOf(key) !== -1) cls += " fail"; else if (key >= state.start) cls += " ok";
+      var cell = document.createElement("div"); cell.className = "day";
+      var dot = document.createElement("div"); dot.className = cls;
+      var lb = document.createElement("span"); lb.textContent = names[dt.getDay()];
+      cell.appendChild(dot); cell.appendChild(lb); wk.appendChild(cell);
+    }
+    showPhrase();
+  }
+
+  /* ---------- listas ---------- */
+  function renderList(ul, items, emptyMsg, withDate, onDel) {
+    ul.innerHTML = "";
+    if (!items.length) { var e = document.createElement("li"); var ep = document.createElement("p"); ep.className = "empty"; ep.textContent = emptyMsg; e.appendChild(ep); ul.appendChild(e); return; }
+    items.forEach(function (it, idx) {
+      var li = document.createElement("li");
+      var p = document.createElement("p");
+      if (withDate) { var tm = document.createElement("time"); tm.textContent = fmtDate(it.d); p.appendChild(tm); }
+      p.appendChild(document.createTextNode(withDate ? it.t : it));
+      var x = document.createElement("button"); x.className = "x"; x.type = "button"; x.setAttribute("aria-label", t("delAria")); x.textContent = "×";
+      x.addEventListener("click", function () { onDel(idx); });
+      li.appendChild(p); li.appendChild(x); ul.appendChild(li);
+    });
+  }
+  function renderReasons() { renderList($("reasonList"), state.reasons, t("reasonEmpty"), false, function (i) { state.reasons.splice(i, 1); save(); renderReasons(); }); }
+  function renderNotes() { renderList($("noteList"), state.notes, t("noteEmpty"), true, function (i) { state.notes.splice(i, 1); save(); renderNotes(); }); }
+
+  $("addReason").addEventListener("click", function () { var v = $("reasonIn").value.trim(); if (!v) return; state.reasons.unshift(v); $("reasonIn").value = ""; save(); renderReasons(); });
+  $("addNote").addEventListener("click", function () { var v = $("noteIn").value.trim(); if (!v) return; state.notes.unshift({ d: new Date().toISOString(), t: v }); $("noteIn").value = ""; save(); renderNotes(); });
+
+  /* ---------- navegación ---------- */
+  var tabs = document.querySelectorAll("nav.tabs button");
+  tabs.forEach(function (b) {
+    b.addEventListener("click", function () {
+      tabs.forEach(function (o) { o.setAttribute("aria-selected", o === b ? "true" : "false"); });
+      document.querySelectorAll("section.view").forEach(function (s) { s.classList.remove("on"); });
+      $("v-" + b.dataset.v).classList.add("on");
+      window.scrollTo(0, 0);
+    });
+  });
+
+  /* ---------- inicio ---------- */
+  $("startBtn").addEventListener("click", function () {
+    var v = $("startDate").value || iso(new Date());
+    if (v > iso(new Date())) v = iso(new Date());
+    state.name = $("nameIn").value.trim();
+    state.faith = $("faithIn").value;
+    state.start = v; state.phraseIdx = new Date().getDate(); save();
+    render(); syncSettings(); fillFaith($("setFaith"), state.faith);
+  });
+  $("phraseNext").addEventListener("click", function () { state.phraseIdx += 1; save(); showPhrase(); });
+
+  /* ---------- idioma ---------- */
+  $("langBtn").addEventListener("click", function () {
+    state.lang = state.lang === "es" ? "en" : "es"; save(); applyLang();
+    if ($("urgeOv").classList.contains("on")) openUrge(true);
+  });
+
+  /* ---------- confirmación ---------- */
+  var confCb = null;
+  function confirmBox(title, text, yes, cb) { $("confTitle").textContent = title; $("confText").textContent = text; $("confYes").textContent = yes; confCb = cb; $("confOv").classList.add("on"); }
+  $("confYes").addEventListener("click", function () { $("confOv").classList.remove("on"); var cb = confCb; confCb = null; if (cb) cb(); });
+  $("confNo").addEventListener("click", function () { $("confOv").classList.remove("on"); confCb = null; });
+
+  $("relapseBtn").addEventListener("click", function () {
+    confirmBox(
+      nm() ? t("relTN", { n: nm() }) : t("relT"),
+      t("relTxt"), t("relYes"),
+      function () { var d = iso(new Date()); if (state.relapses.indexOf(d) === -1) state.relapses.push(d); state.start = d; save(); render(); }
+    );
+  });
+
+  function wipe() {
+    var keepLang = state.lang;
+    state = { start: null, best: 0, relapses: [], urges: 0, reasons: [], notes: [], name: "", faith: "ninguna", pin: "", phraseIdx: 0, lang: keepLang };
+    try { localStorage.removeItem(KEY); localStorage.removeItem(OLD); } catch (e) {}
+    save(); $("nameIn").value = "";
+    applyLang();
+  }
+  $("wipeBtn").addEventListener("click", function () { confirmBox(t("wipeT"), t("wipeTxt"), t("wipeYes"), wipe); });
+
+  /* ---------- momento difícil ---------- */
+  var timerId = null, remaining = 600;
+  function paintTimer() { var m = Math.floor(remaining / 60), s = remaining % 60; $("timer").textContent = m + ":" + (s < 10 ? "0" : "") + s; }
+  function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
+  function openUrge(keepTimer) {
+    $("urgeTitle").textContent = nm() ? t("urgeTitleN", { n: nm() }) : t("urgeTitle");
+    $("urgeAct").textContent = FAITHS[state.faith].act[state.lang];
+
+    var fb = $("urgeFaith"); fb.innerHTML = "";
+    var list = FAITHS[state.faith].phrases;
+    var p = list[Math.floor(Math.random() * list.length)][state.lang];
+    var fp = document.createElement("p"); fp.className = "faithline"; fp.textContent = withName(p[0]); fb.appendChild(fp);
+    if (p[1]) { var rp = document.createElement("p"); rp.className = "small"; rp.textContent = p[1]; fb.appendChild(rp); }
+
+    var box = $("urgeReasons"); box.innerHTML = "";
+    if (state.reasons.length) {
+      var h = document.createElement("p"); var b = document.createElement("b"); b.textContent = t("remindWhy"); h.appendChild(b); box.appendChild(h);
+      state.reasons.slice(0, 3).forEach(function (r) { var q = document.createElement("p"); q.textContent = "• " + r; box.appendChild(q); });
+    } else {
+      var p0 = document.createElement("p"); p0.textContent = t("remindNone"); box.appendChild(p0);
+    }
+    if (keepTimer !== true) {
+      remaining = 600; paintTimer(); stopTimer();
+      timerId = setInterval(function () { remaining -= 1; if (remaining <= 0) { remaining = 0; stopTimer(); } paintTimer(); }, 1000);
+    }
+    $("urgeOv").classList.add("on");
+  }
+  function closeUrge() { stopTimer(); $("urgeOv").classList.remove("on"); }
+  $("urgeBtn").addEventListener("click", function () { openUrge(); });
+  $("urgeClose").addEventListener("click", closeUrge);
+  $("urgeDone").addEventListener("click", function () { state.urges += 1; save(); closeUrge(); render(); });
+
+  /* ---------- ajustes ---------- */
+  function syncSettings() {
+    $("setName").value = state.name || "";
+    $("setFaith").value = state.faith;
+    $("pinOff").style.display = state.pin ? "block" : "none";
+    $("pinSave").textContent = state.pin ? t("pinChange") : t("pinOn");
+  }
+  $("saveSet").addEventListener("click", function () {
+    state.name = $("setName").value.trim();
+    state.faith = $("setFaith").value;
+    state.phraseIdx = 0; save(); render(); syncSettings();
+    $("setMsg").textContent = t("setSaved");
+    setTimeout(function () { $("setMsg").textContent = ""; }, 2500);
+  });
+  $("pinSave").addEventListener("click", function () {
+    var v = $("pinSet").value;
+    if (!/^\d{4}$/.test(v)) { $("pinMsg").textContent = t("pinBad"); return; }
+    state.pin = hashPin(v); save(); $("pinSet").value = "";
+    $("pinMsg").textContent = t("pinSaved"); syncSettings();
+  });
+  $("pinOff").addEventListener("click", function () {
+    state.pin = ""; save(); $("pinMsg").textContent = t("pinRemoved"); syncSettings();
+  });
+
+  /* ---------- bloqueo ---------- */
+  function lock() { if (!state.pin) return; $("lockIn").value = ""; $("lockErr").textContent = ""; $("lockOv").classList.add("on"); }
+  function tryUnlock() {
+    if (hashPin($("lockIn").value) === state.pin) { $("lockOv").classList.remove("on"); $("lockIn").value = ""; $("lockErr").textContent = ""; }
+    else { $("lockErr").textContent = t("lockErr"); $("lockIn").value = ""; }
+  }
+  $("lockGo").addEventListener("click", tryUnlock);
+  $("lockIn").addEventListener("keydown", function (e) { if (e.key === "Enter") tryUnlock(); });
+  $("lockForgot").addEventListener("click", function () {
+    confirmBox(t("forgotT"), t("forgotTxt"), t("forgotYes"), function () { $("lockOv").classList.remove("on"); wipe(); });
+  });
+  document.addEventListener("visibilitychange", function () { if (document.hidden) lock(); });
+
+  /* ---------- tema ---------- */
+  $("themeBtn").addEventListener("click", function () {
+    var root = document.documentElement;
+    var dark = root.getAttribute("data-theme") === "dark" || (!root.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+
+  if ("serviceWorker" in navigator) { window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); }); }
+  load();
+  applyLang();
+  lock();
+})();
+</script>
+</body>
+</html>

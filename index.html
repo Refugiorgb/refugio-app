@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Refugio</title>
-<meta name="theme-color" content="#2f5d44">
+<meta name="theme-color" content="#111613">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Refugio">
@@ -14,17 +14,17 @@
 
 <style>
 :root {
-  --bg: #eef0e6;
-  --surface: #f8f8f1;
-  --ink: #1f2a22;
-  --muted: #5d6b60;
-  --line: #d3d8c8;
-  --green: #2f5d44;
-  --green-ink: #f4f7ee;
-  --sun: #e8a33d;
-  --sun-soft: #f6dfae;
-  --danger: #9a4a3a;
-  --overlay: rgba(31, 42, 34, .55);
+  --bg: #e4e7df;
+  --surface: #edefe8;
+  --ink: #1d2620;
+  --muted: #5b685f;
+  --line: #ccd2c6;
+  --green: #3d6350;
+  --green-ink: #eef2ea;
+  --sun: #a8793a;
+  --sun-soft: #e3d5b6;
+  --danger: #8f4b3d;
+  --overlay: rgba(20, 26, 22, .6);
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -32,15 +32,15 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #17201b; --surface: #202c25; --ink: #e9eee2; --muted: #9fb0a3; --line: #33443a;
-    --green: #8cc3a0; --green-ink: #12201a; --sun: #f0b455; --sun-soft: #4a3a1c; --danger: #e08f7d;
-    --overlay: rgba(0, 0, 0, .65); color-scheme: dark;
+    --bg: #111613; --surface: #19201c; --ink: #dde3da; --muted: #8b998f; --line: #28332c;
+    --green: #6b9780; --green-ink: #0e1511; --sun: #b38a52; --sun-soft: #2b2518; --danger: #c27c6c;
+    --overlay: rgba(0, 0, 0, .7); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #17201b; --surface: #202c25; --ink: #e9eee2; --muted: #9fb0a3; --line: #33443a;
-  --green: #8cc3a0; --green-ink: #12201a; --sun: #f0b455; --sun-soft: #4a3a1c; --danger: #e08f7d;
-  --overlay: rgba(0, 0, 0, .65); color-scheme: dark;
+  --bg: #111613; --surface: #19201c; --ink: #dde3da; --muted: #8b998f; --line: #28332c;
+  --green: #6b9780; --green-ink: #0e1511; --sun: #b38a52; --sun-soft: #2b2518; --danger: #c27c6c;
+  --overlay: rgba(0, 0, 0, .7); color-scheme: dark;
 }
 html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
 *, *::before, *::after { box-sizing: border-box; }
@@ -81,7 +81,7 @@ header.top p { margin: 2px 0 0; font-size: 14px; color: var(--muted); }
 
 .btn { display: block; width: 100%; border: 0; border-radius: 16px; padding: 16px; font: inherit; font-weight: 700; font-size: 18px; cursor: pointer; }
 .btn.primary { background: var(--green); color: var(--green-ink); }
-.btn.sun { background: var(--sun); color: #2a1d05; }
+.btn.sun { background: var(--sun); color: #16110a; }
 .btn.ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); font-weight: 400; font-size: 16px; padding: 12px; }
 .btn + .btn { margin-top: 10px; }
 button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
@@ -310,6 +310,18 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
   </div>
 </div>
 
+<!-- ÁNIMO TRAS UN TROPIEZO -->
+<div class="overlay" id="cheerOv" role="dialog" aria-modal="true" aria-labelledby="cheerTitle">
+  <div class="sheet">
+    <h2 id="cheerTitle"></h2>
+    <p id="cheerMsg" class="hint" style="font-size:18px;color:var(--ink)"></p>
+    <div class="myreasons" id="cheerVerse"></div>
+    <p class="small" id="cheerBest"></p>
+    <button class="btn primary" id="cheerGo" type="button" data-i18n="cheerGo"></button>
+    <button class="btn ghost" id="cheerDiary" type="button" data-i18n="cheerDiary"></button>
+  </div>
+</div>
+
 <!-- BLOQUEO -->
 <div class="overlay lock" id="lockOv" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
   <div class="sheet">
@@ -371,12 +383,23 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
       urgeDone: "Ya pasó, lo superé", urgeClose: "Cerrar", confNo: "Cancelar",
       wipeT: "¿Borrar todo?", wipeTxt: "Se eliminarán tu contador, razones, diario y ajustes de este dispositivo. No se puede deshacer.", wipeYes: "Sí, borrar",
       relT: "Está bien. Levántate", relTN: "Está bien, {n}. Levántate",
-      relTxt: "Un tropiezo no te define. Tu mejor racha se conserva y el contador vuelve a empezar hoy. Lo importante es seguir.", relYes: "Reiniciar y seguir",
+      relTxt: "Un tropiezo no te define y aquí no hay juicio. Tu mejor racha se conserva y el contador vuelve a empezar hoy. Lo importante es que sigues aquí.", relYes: "Reiniciar y seguir",
       lockHint: "Escribe tu PIN para entrar.", lockEnter: "Entrar", lockErr: "PIN incorrecto. Inténtalo otra vez.", lockForgot: "Olvidé mi PIN",
       forgotT: "¿Olvidaste tu PIN?", forgotTxt: "Por tu seguridad, la única forma de entrar es borrar todos los datos de la app y empezar de cero.", forgotYes: "Borrar y empezar de cero",
       morning: "Buenos días", afternoon: "Buenas tardes", night: "Buenas noches",
       goalReached: "¡Meta de {g} días alcanzada! Sigue adelante.", goalNext: "Próxima meta: {g} días. Te faltan {left}.",
       weekAria: "Últimos 7 días", delAria: "Eliminar",
+      cheerTitle: "Aquí nadie te juzga", cheerTitleN: "No te preocupes, {n}. Aquí nadie te juzga",
+      cheerMsgs: [
+        "Un tropiezo no borra todo lo que has avanzado. Lo que aprendiste sigue contigo.",
+        "Levantarte hoy es lo que de verdad cuenta. Es admirable que sigas intentándolo.",
+        "No eres tu peor momento. Respira, perdónate y vuelve a empezar con calma.",
+        "Cada intento te enseña algo. Piensa qué lo provocó, sin culparte, y prepárate para la próxima vez.",
+        "Caer no es fracasar. Fracasar sería dejar de intentarlo, y tú acabas de decidir seguir.",
+        "Hoy es un nuevo comienzo. Un paso a la vez es suficiente."
+      ],
+      cheerBest: "Tu mejor racha, {b} días, sigue siendo tuya. Nadie te la quita.",
+      cheerGo: "Seguir adelante", cheerDiary: "Escribir en mi diario",
       langBtn: "English", weekDays: ["D", "L", "M", "X", "J", "V", "S"], locale: "es"
     },
     en: {
@@ -421,12 +444,23 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
       urgeDone: "It passed, I made it", urgeClose: "Close", confNo: "Cancel",
       wipeT: "Delete everything?", wipeTxt: "Your counter, reasons, journal and settings will be erased from this device. This can't be undone.", wipeYes: "Yes, delete",
       relT: "It's okay. Get back up.", relTN: "It's okay, {n}. Get back up.",
-      relTxt: "A stumble doesn't define you. Your best streak is kept and the counter starts again today. What matters is to keep going.", relYes: "Restart and keep going",
+      relTxt: "A stumble doesn't define you and there is no judgment here. Your best streak is kept and the counter starts again today. What matters is that you are still here.", relYes: "Restart and keep going",
       lockHint: "Enter your PIN to open the app.", lockEnter: "Open", lockErr: "Wrong PIN. Try again.", lockForgot: "I forgot my PIN",
       forgotT: "Forgot your PIN?", forgotTxt: "For your security, the only way back in is to erase all app data and start over.", forgotYes: "Erase and start over",
       morning: "Good morning", afternoon: "Good afternoon", night: "Good evening",
       goalReached: "{g}-day goal reached! Keep going.", goalNext: "Next goal: {g} days. {left} to go.",
       weekAria: "Last 7 days", delAria: "Delete",
+      cheerTitle: "No one is judging you here", cheerTitleN: "Don't worry, {n}. No one is judging you here",
+      cheerMsgs: [
+        "A stumble doesn't erase everything you've gained. What you learned stays with you.",
+        "Getting back up today is what truly counts. It's admirable that you keep trying.",
+        "You are not your worst moment. Breathe, forgive yourself, and start again calmly.",
+        "Every attempt teaches you something. Think about what triggered it, without blaming yourself, and get ready for next time.",
+        "Falling isn't failing. Failing would be to stop trying, and you just decided to keep going.",
+        "Today is a new beginning. One step at a time is enough."
+      ],
+      cheerBest: "Your best streak, {b} days, is still yours. No one can take it away.",
+      cheerGo: "Keep going", cheerDiary: "Write in my journal",
       langBtn: "Español", weekDays: ["S", "M", "T", "W", "T", "F", "S"], locale: "en"
     }
   };
@@ -435,30 +469,50 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
   var FAITHS = {
     cristiana: {
       label: { es: "Cristiana (Biblia)", en: "Christian (Bible)" },
-      act: { es: "Haz una oración corta o lee un salmo.", en: "Say a short prayer or read a psalm." },
+      act: { es: "Lee en voz baja uno de estos versículos y haz una oración corta.", en: "Read one of these verses quietly and say a short prayer." },
       support: { es: "Busca a un pastor, a tu grupo de oración o a un amigo de confianza en tu iglesia.", en: "Reach out to a pastor, your prayer group, or a trusted friend at church." },
       phrases: [
-        { es: ["Todo lo puedo en Cristo que me fortalece.", "Filipenses 4:13"], en: ["I can do all things through Christ who strengthens me.", "Philippians 4:13"] },
-        { es: ["No temas, {n}, porque yo estoy contigo.", "Basado en Isaías 41:10"], en: ["Do not fear, {n}, for I am with you.", "Based on Isaiah 41:10"] },
-        { es: ["Dios es fiel y no permitirá una prueba mayor que tus fuerzas; siempre abre una salida.", "Basado en 1 Corintios 10:13"], en: ["God is faithful; he will not allow a trial beyond your strength, and he always provides a way out.", "Based on 1 Corinthians 10:13"] },
-        { es: ["Crea en mí, oh Dios, un corazón limpio.", "Salmo 51:10"], en: ["Create in me a clean heart, O God.", "Psalm 51:10"] },
-        { es: ["Las misericordias de Dios son nuevas cada mañana.", "Basado en Lamentaciones 3:22-23"], en: ["God's mercies are new every morning.", "Based on Lamentations 3:22-23"] },
-        { es: ["Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.", "Mateo 11:28"], en: ["Come to me, all who are weary and burdened, and I will give you rest.", "Matthew 11:28"] },
-        { es: ["Siete veces cae el justo, y vuelve a levantarse.", "Proverbios 24:16"], en: ["The righteous may fall seven times, and rise again.", "Proverbs 24:16"] }
+        { es: ["Todo lo puedo en Cristo que me fortalece.", "Filipenses 4:13 (RV1909)"], en: ["I can do all things through Christ which strengtheneth me.", "Philippians 4:13 (KJV)"] },
+        { es: ["Dios es nuestro amparo y fortaleza, nuestro pronto auxilio en las tribulaciones.", "Salmo 46:1 (RV1909)"], en: ["God is our refuge and strength, a very present help in trouble.", "Psalm 46:1 (KJV)"] },
+        { es: ["Digo, pues: Andad en el Espíritu, y no cumpliréis la concupiscencia de la carne.", "Gálatas 5:16 (RV1909)"], en: ["This I say then, Walk in the Spirit, and ye shall not fulfil the lust of the flesh.", "Galatians 5:16 (KJV)"] },
+        { es: ["Aparta mis ojos, que no vean la vanidad; avívame en tu camino.", "Salmo 119:37 (RV1909)"], en: ["Turn away mine eyes from beholding vanity; and quicken thou me in thy way.", "Psalm 119:37 (KJV)"] },
+        { es: ["Crea en mí, oh Dios, un corazón limpio; y renueva un espíritu recto dentro de mí.", "Salmo 51:10 (RV1909)"], en: ["Create in me a clean heart, O God; and renew a right spirit within me.", "Psalm 51:10 (KJV)"] },
+        { es: ["Bienaventurados los de limpio corazón, porque ellos verán a Dios.", "Mateo 5:8 (RV1909)"], en: ["Blessed are the pure in heart: for they shall see God.", "Matthew 5:8 (KJV)"] },
+        { es: ["Fiel es Dios, que no os dejará ser tentados más de lo que podéis llevar; antes dará también juntamente con la tentación la salida.", "1 Corintios 10:13 (RV1909)"], en: ["God is faithful, who will not suffer you to be tempted above that ye are able; but will with the temptation also make a way to escape.", "1 Corinthians 10:13 (KJV)"] },
+        { es: ["Ahora, pues, ninguna condenación hay para los que están en Cristo Jesús.", "Romanos 8:1 (RV1909)"], en: ["There is therefore now no condemnation to them which are in Christ Jesus.", "Romans 8:1 (KJV)"] },
+        { es: ["Si confesamos nuestros pecados, él es fiel y justo para que nos perdone los pecados, y nos limpie de toda maldad.", "1 Juan 1:9 (RV1909)"], en: ["If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.", "1 John 1:9 (KJV)"] },
+        { es: ["Porque siete veces cae el justo, y se vuelve a levantar.", "Proverbios 24:16 (RV1909)"], en: ["For a just man falleth seven times, and riseth up again.", "Proverbs 24:16 (KJV)"] },
+        { es: ["Por la misericordia de Jehová no hemos sido consumidos, porque nunca decayeron sus misericordias. Nuevas son cada mañana; grande es tu fidelidad.", "Lamentaciones 3:22-23 (RV1909)"], en: ["It is of the LORD'S mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness.", "Lamentations 3:22-23 (KJV)"] },
+        { es: ["Venid a mí todos los que estáis trabajados y cargados, que yo os haré descansar.", "Mateo 11:28 (RV1909)"], en: ["Come unto me, all ye that labour and are heavy laden, and I will give you rest.", "Matthew 11:28 (KJV)"] },
+        { es: ["Cercano está Jehová a los quebrantados de corazón; y salvará a los contritos de espíritu.", "Salmo 34:18 (RV1909)"], en: ["The LORD is nigh unto them that are of a broken heart; and saveth such as be of a contrite spirit.", "Psalm 34:18 (KJV)"] },
+        { es: ["No temas, porque yo estoy contigo; no desmayes, porque yo soy tu Dios que te esfuerzo; siempre te ayudaré.", "Isaías 41:10 (RV1909)"], en: ["Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee.", "Isaiah 41:10 (KJV)"] },
+        { es: ["Mira que te mando que te esfuerces y seas valiente; no temas ni desmayes, porque Jehová tu Dios será contigo en donde quiera que fueres.", "Josué 1:9 (RV1909)"], en: ["Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest.", "Joshua 1:9 (KJV)"] },
+        { es: ["Porque no nos ha dado Dios espíritu de temor, sino de fortaleza, y de amor, y de templanza.", "2 Timoteo 1:7 (RV1909)"], en: ["For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.", "2 Timothy 1:7 (KJV)"] },
+        { es: ["Mas los que esperan a Jehová tendrán nuevas fuerzas; levantarán alas como águilas; correrán, y no se cansarán.", "Isaías 40:31 (RV1909)"], en: ["They that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary.", "Isaiah 40:31 (KJV)"] }
       ]
     },
     catolica: {
-      label: { es: "Católica", en: "Catholic" },
-      act: { es: "Reza un Ave María o un Padre Nuestro y pon tu lucha en manos de Dios.", en: "Pray a Hail Mary or an Our Father and place your struggle in God's hands." },
+      label: { es: "Católica (Biblia)", en: "Catholic (Bible)" },
+      act: { es: "Lee uno de estos versículos y reza un Ave María o un Padre Nuestro.", en: "Read one of these verses and pray a Hail Mary or an Our Father." },
       support: { es: "Habla con un sacerdote, acude a la confesión o únete a un grupo de tu parroquia.", en: "Talk with a priest, go to confession, or join a parish group." },
       phrases: [
-        { es: ["Todo lo puedo en Cristo que me fortalece.", "Filipenses 4:13"], en: ["I can do all things through Christ who strengthens me.", "Philippians 4:13"] },
-        { es: ["Crea en mí, oh Dios, un corazón puro.", "Salmo 51:12"], en: ["Create in me a pure heart, O God.", "Psalm 51:12"] },
-        { es: ["La confesión es un nuevo comienzo: Dios te recibe sin juzgarte, {n}.", ""], en: ["Confession is a fresh start: God welcomes you without judging you, {n}.", ""] },
-        { es: ["Las misericordias de Dios son nuevas cada mañana.", "Basado en Lamentaciones 3:22-23"], en: ["God's mercies are new every morning.", "Based on Lamentations 3:22-23"] },
-        { es: ["Pon tu lucha en manos de la Virgen María y pide su ayuda hoy.", ""], en: ["Place your struggle in the hands of the Virgin Mary and ask for her help today.", ""] },
-        { es: ["Dios es fiel y no permitirá una prueba mayor que tus fuerzas.", "Basado en 1 Corintios 10:13"], en: ["God is faithful and will not allow a trial beyond your strength.", "Based on 1 Corinthians 10:13"] },
-        { es: ["Un tropiezo no te aleja de Dios; volver a Él es siempre posible.", ""], en: ["A stumble does not take you away from God; returning to Him is always possible.", ""] }
+        { es: ["Todo lo puedo en Cristo que me fortalece.", "Filipenses 4:13 (RV1909)"], en: ["I can do all things through Christ which strengtheneth me.", "Philippians 4:13 (KJV)"] },
+        { es: ["Dios es nuestro amparo y fortaleza, nuestro pronto auxilio en las tribulaciones.", "Salmo 46:1 (RV1909)"], en: ["God is our refuge and strength, a very present help in trouble.", "Psalm 46:1 (KJV)"] },
+        { es: ["Digo, pues: Andad en el Espíritu, y no cumpliréis la concupiscencia de la carne.", "Gálatas 5:16 (RV1909)"], en: ["This I say then, Walk in the Spirit, and ye shall not fulfil the lust of the flesh.", "Galatians 5:16 (KJV)"] },
+        { es: ["Aparta mis ojos, que no vean la vanidad; avívame en tu camino.", "Salmo 119:37 (RV1909)"], en: ["Turn away mine eyes from beholding vanity; and quicken thou me in thy way.", "Psalm 119:37 (KJV)"] },
+        { es: ["Crea en mí, oh Dios, un corazón limpio; y renueva un espíritu recto dentro de mí.", "Salmo 51:10 (RV1909)"], en: ["Create in me a clean heart, O God; and renew a right spirit within me.", "Psalm 51:10 (KJV)"] },
+        { es: ["Bienaventurados los de limpio corazón, porque ellos verán a Dios.", "Mateo 5:8 (RV1909)"], en: ["Blessed are the pure in heart: for they shall see God.", "Matthew 5:8 (KJV)"] },
+        { es: ["Fiel es Dios, que no os dejará ser tentados más de lo que podéis llevar; antes dará también juntamente con la tentación la salida.", "1 Corintios 10:13 (RV1909)"], en: ["God is faithful, who will not suffer you to be tempted above that ye are able; but will with the temptation also make a way to escape.", "1 Corinthians 10:13 (KJV)"] },
+        { es: ["Ahora, pues, ninguna condenación hay para los que están en Cristo Jesús.", "Romanos 8:1 (RV1909)"], en: ["There is therefore now no condemnation to them which are in Christ Jesus.", "Romans 8:1 (KJV)"] },
+        { es: ["Si confesamos nuestros pecados, él es fiel y justo para que nos perdone los pecados, y nos limpie de toda maldad.", "1 Juan 1:9 (RV1909)"], en: ["If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.", "1 John 1:9 (KJV)"] },
+        { es: ["Porque siete veces cae el justo, y se vuelve a levantar.", "Proverbios 24:16 (RV1909)"], en: ["For a just man falleth seven times, and riseth up again.", "Proverbs 24:16 (KJV)"] },
+        { es: ["Por la misericordia de Jehová no hemos sido consumidos, porque nunca decayeron sus misericordias. Nuevas son cada mañana; grande es tu fidelidad.", "Lamentaciones 3:22-23 (RV1909)"], en: ["It is of the LORD'S mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness.", "Lamentations 3:22-23 (KJV)"] },
+        { es: ["Venid a mí todos los que estáis trabajados y cargados, que yo os haré descansar.", "Mateo 11:28 (RV1909)"], en: ["Come unto me, all ye that labour and are heavy laden, and I will give you rest.", "Matthew 11:28 (KJV)"] },
+        { es: ["Cercano está Jehová a los quebrantados de corazón; y salvará a los contritos de espíritu.", "Salmo 34:18 (RV1909)"], en: ["The LORD is nigh unto them that are of a broken heart; and saveth such as be of a contrite spirit.", "Psalm 34:18 (KJV)"] },
+        { es: ["No temas, porque yo estoy contigo; no desmayes, porque yo soy tu Dios que te esfuerzo; siempre te ayudaré.", "Isaías 41:10 (RV1909)"], en: ["Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee.", "Isaiah 41:10 (KJV)"] },
+        { es: ["Mira que te mando que te esfuerces y seas valiente; no temas ni desmayes, porque Jehová tu Dios será contigo en donde quiera que fueres.", "Josué 1:9 (RV1909)"], en: ["Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest.", "Joshua 1:9 (KJV)"] },
+        { es: ["Porque no nos ha dado Dios espíritu de temor, sino de fortaleza, y de amor, y de templanza.", "2 Timoteo 1:7 (RV1909)"], en: ["For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind.", "2 Timothy 1:7 (KJV)"] },
+        { es: ["Mas los que esperan a Jehová tendrán nuevas fuerzas; levantarán alas como águilas; correrán, y no se cansarán.", "Isaías 40:31 (RV1909)"], en: ["They that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary.", "Isaiah 40:31 (KJV)"] }
       ]
     },
     islam: {
@@ -517,14 +571,16 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
   };
   var FAITH_ORDER = ["cristiana", "catolica", "islam", "judia", "espiritual", "ninguna"];
 
-  var state = { start: null, best: 0, relapses: [], urges: 0, reasons: [], notes: [], name: "", faith: "ninguna", pin: "", phraseIdx: 0, lang: "" };
+  var state = { start: null, best: 0, relapses: [], urges: 0, reasons: [], notes: [], name: "", faith: "cristiana", pin: "", phraseIdx: 0, lang: "", theme: "dark" };
 
   function load() {
     try {
       var raw = localStorage.getItem(KEY) || localStorage.getItem(OLD);
       if (raw) { var s = JSON.parse(raw); for (var k in state) if (s[k] !== undefined) state[k] = s[k]; }
     } catch (e) {}
-    if (!FAITHS[state.faith]) state.faith = "ninguna";
+    if (!FAITHS[state.faith]) state.faith = "cristiana";
+    if (state.theme !== "light" && state.theme !== "dark") state.theme = "dark";
+    document.documentElement.setAttribute("data-theme", state.theme);
     if (state.lang !== "es" && state.lang !== "en") {
       var nav = (navigator.language || "es").toLowerCase();
       state.lang = nav.indexOf("es") === 0 ? "es" : "en";
@@ -679,6 +735,26 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
     if ($("urgeOv").classList.contains("on")) openUrge(true);
   });
 
+  /* ---------- ánimo tras un tropiezo ---------- */
+  function showCheer() {
+    $("cheerTitle").textContent = nm() ? t("cheerTitleN", { n: nm() }) : t("cheerTitle");
+    var msgs = t("cheerMsgs");
+    $("cheerMsg").textContent = msgs[Math.floor(Math.random() * msgs.length)];
+    var vb = $("cheerVerse"); vb.innerHTML = "";
+    var list = FAITHS[state.faith].phrases;
+    var p = list[Math.floor(Math.random() * list.length)][state.lang];
+    var vp = document.createElement("p"); vp.className = "faithline"; vp.textContent = withName(p[0]); vb.appendChild(vp);
+    if (p[1]) { var rp = document.createElement("p"); rp.className = "small"; rp.textContent = p[1]; vb.appendChild(rp); }
+    $("cheerBest").textContent = state.best > 0 ? t("cheerBest", { b: state.best }) : "";
+    $("cheerOv").classList.add("on");
+  }
+  $("cheerGo").addEventListener("click", function () { $("cheerOv").classList.remove("on"); window.scrollTo(0, 0); });
+  $("cheerDiary").addEventListener("click", function () {
+    $("cheerOv").classList.remove("on");
+    var tab = document.querySelector('nav.tabs button[data-v="diario"]'); if (tab) tab.click();
+    setTimeout(function () { $("noteIn").focus(); }, 50);
+  });
+
   /* ---------- confirmación ---------- */
   var confCb = null;
   function confirmBox(title, text, yes, cb) { $("confTitle").textContent = title; $("confText").textContent = text; $("confYes").textContent = yes; confCb = cb; $("confOv").classList.add("on"); }
@@ -689,13 +765,13 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
     confirmBox(
       nm() ? t("relTN", { n: nm() }) : t("relT"),
       t("relTxt"), t("relYes"),
-      function () { var d = iso(new Date()); if (state.relapses.indexOf(d) === -1) state.relapses.push(d); state.start = d; save(); render(); }
+      function () { var n0 = streak(); if (n0 > state.best) state.best = n0; var d = iso(new Date()); if (state.relapses.indexOf(d) === -1) state.relapses.push(d); state.start = d; save(); render(); showCheer(); }
     );
   });
 
   function wipe() {
-    var keepLang = state.lang;
-    state = { start: null, best: 0, relapses: [], urges: 0, reasons: [], notes: [], name: "", faith: "ninguna", pin: "", phraseIdx: 0, lang: keepLang };
+    var keepLang = state.lang, keepTheme = state.theme;
+    state = { start: null, best: 0, relapses: [], urges: 0, reasons: [], notes: [], name: "", faith: "cristiana", pin: "", phraseIdx: 0, lang: keepLang, theme: keepTheme };
     try { localStorage.removeItem(KEY); localStorage.removeItem(OLD); } catch (e) {}
     save(); $("nameIn").value = "";
     applyLang();
@@ -773,9 +849,9 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
 
   /* ---------- tema ---------- */
   $("themeBtn").addEventListener("click", function () {
-    var root = document.documentElement;
-    var dark = root.getAttribute("data-theme") === "dark" || (!root.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
-    root.setAttribute("data-theme", dark ? "light" : "dark");
+    state.theme = state.theme === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", state.theme);
+    save();
   });
 
   if ("serviceWorker" in navigator) { window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); }); }

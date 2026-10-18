@@ -185,6 +185,8 @@ html.has-wall .card, html.has-wall .stat, html.has-wall .verse { background: col
 .breath { width: 160px; height: 160px; margin: 0; border-radius: 50%; background: var(--sun-soft); border: 3px solid var(--sun); display: flex; align-items: center; justify-content: center; text-align: center; transform: scale(.7); animation: none; }
 .breath .bl { font-size: 20px; font-weight: 700; }
 .breath .bc { font-size: 38px; font-weight: 800; line-height: 1.1; }
+.verse p, .verse small { transition: opacity .35s ease; }
+.verse.fade p, .verse.fade small { opacity: 0; }
 </style>
 </head>
 <body>
@@ -271,7 +273,7 @@ html.has-wall .card, html.has-wall .stat, html.has-wall .verse { background: col
         <p style="margin:0" id="dailyMsg"></p>
       </div>
 
-      <div class="verse">
+      <div class="verse" id="verseBox">
         <p id="phraseText"></p>
         <small id="phraseRef"></small>
         <button type="button" id="phraseNext" data-i18n="phraseNext"></button>
@@ -438,6 +440,9 @@ html.has-wall .card, html.has-wall .stat, html.has-wall .verse { background: col
       <h2 data-i18n="prefT"></h2>
       <label class="chk"><input type="checkbox" id="chkWelcome"><span data-i18n="prefWelcome"></span></label>
       <label class="chk"><input type="checkbox" id="chkVibe"><span data-i18n="prefVibe"></span></label>
+      <label class="f" for="setRot" data-i18n="prefRotL"></label>
+      <select id="setRot"></select>
+      <p class="small" data-i18n="prefRotHint" style="margin-top:8px"></p>
     </div>
 
     <div class="card">
@@ -901,6 +906,21 @@ html.has-wall .card, html.has-wall .stat, html.has-wall .verse { background: col
   "prefVibe": "Gentle vibration while breathing",
   "wipeTxt": "Your counter, reasons, plan, journal, images and settings will be erased from this device. This can't be undone."
 });
+
+  Object.assign(L.es, {
+    "prefRotL": "Cambio automático de versículos y mensajes",
+    "rotOpen": "Cada vez que abro la app",
+    "rotMinute": "Cada minuto mientras la uso",
+    "rotDay": "Una vez al día",
+    "prefRotHint": "También puedes tocar «Otra frase» cuando quieras."
+  });
+  Object.assign(L.en, {
+    "prefRotL": "Automatic change of verses and messages",
+    "rotOpen": "Every time I open the app",
+    "rotMinute": "Every minute while I use it",
+    "rotDay": "Once a day",
+    "prefRotHint": "You can also tap “Another phrase” whenever you like."
+  });
 
   /* ================= FE / FAITH ================= */
   var FAITHS = {
@@ -1402,7 +1422,7 @@ html.has-wall .card, html.has-wall .stat, html.has-wall .verse { background: col
 };
   var FAITH_ORDER = ["cristiana", "catolica", "islam", "judia", "espiritual", "ninguna"];
 
-  var state = { start: null, best: 0, relapses: [], urges: 0, reasons: [], notes: [], name: "", faith: "cristiana", pin: "", phraseIdx: 0, lang: "", theme: "dark", moods: {}, seen: [], plan: { triggers: [], actions: [], name: "", phone: "", pledge: "" }, appear: { palette: "bosque", accent: "", detail: "", dim: 50, hasWall: false, hasLogo: false }, showWelcome: true, vibe: true };
+  var state = { start: null, best: 0, relapses: [], urges: 0, reasons: [], notes: [], name: "", faith: "cristiana", pin: "", phraseIdx: 0, lang: "", theme: "dark", moods: {}, seen: [], plan: { triggers: [], actions: [], name: "", phone: "", pledge: "" }, appear: { palette: "bosque", accent: "", detail: "", dim: 50, hasWall: false, hasLogo: false }, showWelcome: true, vibe: true, rot: "open" };
 
   function load() {
     try {
@@ -1414,6 +1434,7 @@ html.has-wall .card, html.has-wall .stat, html.has-wall .verse { background: col
     if (!Array.isArray(state.plan.triggers)) state.plan.triggers = [];
     if (!Array.isArray(state.plan.actions)) state.plan.actions = [];
     state.appear = Object.assign({ palette: "bosque", accent: "", detail: "", dim: 50, hasWall: false, hasLogo: false }, state.appear || {});
+    if (["open", "minute", "day"].indexOf(state.rot) === -1) state.rot = "open";
     if (state.theme !== "light" && state.theme !== "dark") state.theme = "dark";
     document.documentElement.setAttribute("data-theme", state.theme);
     if (state.lang !== "es" && state.lang !== "en") {
@@ -1465,13 +1486,22 @@ html.has-wall .card, html.has-wall .stat, html.has-wall .verse { background: col
   }
 
   /* ---------- frases ---------- */
-  function showPhrase() {
+  function dayOfYear() { var now = new Date(); return Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 864e5); }
+  function verseIdx() { return (state.rot === "day" ? dayOfYear() : 0) + (state.phraseIdx || 0); }
+  function showPhrase(animate) {
     var list = FAITHS[state.faith].phrases;
-    var i = ((state.phraseIdx % list.length) + list.length) % list.length;
+    var i = ((verseIdx() % list.length) + list.length) % list.length;
     var p = list[i][state.lang];
-    $("phraseText").textContent = withName(p[0]);
-    $("phraseRef").textContent = p[1];
-    $("phraseRef").style.display = p[1] ? "block" : "none";
+    function paint() {
+      $("phraseText").textContent = withName(p[0]);
+      $("phraseRef").textContent = p[1];
+      $("phraseRef").style.display = p[1] ? "block" : "none";
+    }
+    var box = $("verseBox");
+    if (animate && box && !calmMotion()) {
+      box.classList.add("fade");
+      setTimeout(function () { paint(); box.classList.remove("fade"); }, 350);
+    } else paint();
   }
 
   /* ---------- Hoy ---------- */
@@ -1569,7 +1599,7 @@ html.has-wall .card, html.has-wall .stat, html.has-wall .verse { background: col
     state.start = v; state.phraseIdx = new Date().getDate(); save();
     render(); syncSettings(); fillFaith($("setFaith"), state.faith);
   });
-  $("phraseNext").addEventListener("click", function () { state.phraseIdx += 1; save(); showPhrase(); });
+  $("phraseNext").addEventListener("click", function () { state.phraseIdx += 1; save(); showPhrase(true); });
 
   /* ---------- idioma ---------- */
   $("langBtn").addEventListener("click", function () {
@@ -1599,9 +1629,8 @@ html.has-wall .card, html.has-wall .stat, html.has-wall .verse { background: col
   /* ---------- mensaje diario ---------- */
   function renderDaily() {
     var msgs = t("dailyMsgs");
-    var now = new Date();
-    var doy = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 864e5);
-    $("dailyMsg").textContent = msgs[doy % msgs.length];
+    var idx = (dayOfYear() + (state.rot === "day" ? 0 : (state.phraseIdx || 0))) % msgs.length;
+    $("dailyMsg").textContent = msgs[idx];
   }
 
   /* ---------- estado de ánimo ---------- */
@@ -1698,7 +1727,7 @@ html.has-wall .card, html.has-wall .stat, html.has-wall .verse { background: col
 
   function wipe() {
     var keepLang = state.lang, keepTheme = state.theme;
-    state = { start: null, best: 0, relapses: [], urges: 0, reasons: [], notes: [], name: "", faith: "cristiana", pin: "", phraseIdx: 0, lang: keepLang, theme: keepTheme, moods: {}, seen: [], plan: { triggers: [], actions: [], name: "", phone: "", pledge: "" }, appear: { palette: "bosque", accent: "", detail: "", dim: 50, hasWall: false, hasLogo: false }, showWelcome: true, vibe: true };
+    state = { start: null, best: 0, relapses: [], urges: 0, reasons: [], notes: [], name: "", faith: "cristiana", pin: "", phraseIdx: 0, lang: keepLang, theme: keepTheme, moods: {}, seen: [], plan: { triggers: [], actions: [], name: "", phone: "", pledge: "" }, appear: { palette: "bosque", accent: "", detail: "", dim: 50, hasWall: false, hasLogo: false }, showWelcome: true, vibe: true, rot: "open" };
     try { localStorage.removeItem(KEY); localStorage.removeItem(OLD); } catch (e) {}
     save(); $("nameIn").value = "";
     dbClear(); freeMedia(); applyAppearance(); applyLogo();
@@ -1770,6 +1799,7 @@ html.has-wall .card, html.has-wall .stat, html.has-wall .verse { background: col
     $("apDim").value = state.appear.dim;
     $("chkWelcome").checked = state.showWelcome !== false;
     $("chkVibe").checked = state.vibe !== false;
+    fillRot();
     $("wallRemove").style.display = state.appear.hasWall ? "block" : "none";
     $("logoRemove").style.display = state.appear.hasLogo ? "block" : "none";
     $("apAccent").value = hexOf(state.appear.accent, "--green");
@@ -2272,15 +2302,37 @@ html.has-wall .card, html.has-wall .stat, html.has-wall .verse { background: col
     $("wsTitle").textContent = nm() ? t("wsTitleN", { n: nm() }) : t("wsTitle");
     $("wsMsg").textContent = t("wsMsg"); $("wsMsg2").textContent = t("wsMsg2");
     var vb = $("wsVerse"); vb.innerHTML = "";
-    var list = FAITHS[state.faith].phrases, p = list[new Date().getDate() % list.length][state.lang];
+    var list = FAITHS[state.faith].phrases, p = list[((verseIdx() % list.length) + list.length) % list.length][state.lang];
     var vp = document.createElement("p"); vp.className = "faithline"; vp.textContent = withName(p[0]); vb.appendChild(vp);
     if (p[1]) { var rp = document.createElement("p"); rp.className = "small"; rp.textContent = p[1]; vb.appendChild(rp); }
     $("welcomeOv").classList.add("on");
   }
   $("wsGo").addEventListener("click", function () { $("welcomeOv").classList.remove("on"); window.scrollTo(0, 0); });
 
+  /* ---------- cambio automático de versículos y mensajes ---------- */
+  function fillRot() {
+    var sel = $("setRot"); sel.innerHTML = "";
+    [["open", "rotOpen"], ["minute", "rotMinute"], ["day", "rotDay"]].forEach(function (o) {
+      var op = document.createElement("option"); op.value = o[0]; op.textContent = t(o[1]); sel.appendChild(op);
+    });
+    sel.value = state.rot;
+  }
+  $("setRot").addEventListener("change", function () { state.rot = this.value; save(); showPhrase(true); renderDaily(); });
+  var curDay = iso(new Date());
+  function checkNewDay() {
+    var d = iso(new Date());
+    if (d !== curDay) { curDay = d; render(); }
+  }
+  setInterval(function () {
+    if (document.hidden) return;
+    checkNewDay();
+    if (state.rot === "minute" && state.start) { state.phraseIdx = (state.phraseIdx || 0) + 1; showPhrase(true); renderDaily(); }
+  }, 60000);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) checkNewDay(); });
+
   if ("serviceWorker" in navigator) { window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); }); }
   load();
+  if (state.rot !== "day") { state.phraseIdx = (state.phraseIdx || 0) + 1; save(); }
   applyAppearance();
   loadMedia();
   applyLogo();

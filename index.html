@@ -44,7 +44,7 @@
 }
 html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
 *, *::before, *::after { box-sizing: border-box; }
-body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink);
+body { margin: 0; min-height: 100%; background: transparent; color: var(--ink);
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 17px; line-height: 1.55; }
 h1, h2, h3 { font-family: "Trebuchet MS", "Avenir Next", system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0; line-height: 1.1; letter-spacing: -.01em; }
 .app { max-width: 520px; margin: 0 auto; padding: 20px 18px 96px; }
@@ -122,9 +122,7 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
 .overlay.lock .sheet { border-radius: 22px; text-align: center; }
 .sheet { background: var(--bg); width: 100%; max-width: 520px; max-height: 94%; overflow-y: auto; border-radius: 22px 22px 0 0; padding: 22px 18px calc(22px + env(safe-area-inset-bottom, 0px)); }
 .sheet h2 { font-size: 26px; margin-bottom: 6px; }
-.breath { width: 150px; height: 150px; margin: 18px auto; border-radius: 50%; background: var(--sun-soft); border: 3px solid var(--sun); display: flex; align-items: center; justify-content: center; font-family: "Trebuchet MS", "Avenir Next", system-ui, -apple-system, "Segoe UI", sans-serif; font-weight: 700; animation: breathe 10s ease-in-out infinite; }
-@keyframes breathe { 0%, 100% { transform: scale(.7); } 40% { transform: scale(1.05); } }
-@media (prefers-reduced-motion: reduce) { .breath { animation: none; } .prog { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .prog { transition: none; } }
 .timer { text-align: center; font-family: "Trebuchet MS", "Avenir Next", system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 40px; font-weight: 800; }
 .steps { margin: 14px 0; padding-left: 20px; }
 .steps li { margin-bottom: 6px; }
@@ -136,18 +134,73 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
 .small { font-size: 14px; color: var(--muted); }
 .pin { text-align: center; letter-spacing: .5em; font-size: 28px; max-width: 220px; margin: 14px auto; display: block; }
 .err { color: var(--danger); min-height: 1.4em; margin: 0; font-size: 15px; }
+.moods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.mood { background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 12px; padding: 12px 6px; font: inherit; cursor: pointer; }
+.mood[aria-pressed="true"] { background: var(--green); color: var(--green-ink); border-color: var(--green); font-weight: 700; }
+.weekmood { display: flex; justify-content: center; align-items: flex-end; gap: 10px; height: 74px; margin: 16px 0 8px; }
+.wm { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; font-size: 12px; color: var(--muted); height: 100%; }
+.bar { width: 22px; border-radius: 6px; }
+.bar.m3 { height: 44px; background: var(--green); }
+.bar.m2 { height: 28px; background: var(--sun); }
+.bar.m1 { height: 14px; background: var(--danger); }
+.bar.m0 { height: 6px; background: var(--line); }
+.pray details { border-top: 1px solid var(--line); padding: 12px 0; }
+.pray details:first-child { border-top: 0; }
+.pray summary { cursor: pointer; font-weight: 700; }
+.pray .pbody { white-space: pre-wrap; margin-top: 10px; line-height: 1.7; }
+nav.tabs button { font-size: 14px !important; padding: 14px 2px !important; }
+.btnrow { display: flex; gap: 8px; align-items: stretch; margin-top: 10px; }
+.btnrow .btn { flex: 1; margin: 0; }
+.info { flex: 0 0 52px; width: 52px; border-radius: 16px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-style: italic; font-weight: 700; font-size: 24px; cursor: pointer; }
+.infobody p { margin: 0 0 12px; }
+html { background: var(--bg); }
+.f { display: block; font-weight: 700; font-size: 15px; margin: 14px 0 6px; }
+a.btn { text-align: center; text-decoration: none; }
+.brand { display: flex; gap: 12px; align-items: center; min-width: 0; }
+.logo { width: 42px; height: 42px; border-radius: 12px; overflow: hidden; flex: 0 0 42px; }
+.logo img, .logo svg, .splashlogo img, .splashlogo svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+.splashlogo { width: 92px; height: 92px; margin: 0 auto 16px; border-radius: 22px; overflow: hidden; }
+.overlay.splash { z-index: 35; align-items: center; background: var(--bg); }
+.sheet.center { text-align: center; border-radius: 22px; padding: 28px 20px; }
+.sheet.center p.big { font-size: 19px; margin: 0 0 10px; color: var(--ink); }
+.sheet.full { height: 100%; max-height: 100%; border-radius: 0; }
+.sethead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 10px; }
+.sethead h2 { margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 10px; }
+.chip { border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 999px; padding: 9px 14px; font: inherit; font-size: 15px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--green); color: var(--green-ink); border-color: var(--green); font-weight: 700; }
+.dotc { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 7px; vertical-align: -1px; }
+.colrow { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; margin: 4px 0 8px; }
+.clab { display: flex; flex-direction: column; gap: 6px; font-size: 15px; margin: 8px 0; }
+input[type=color] { width: 64px; height: 44px; padding: 2px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); }
+input[type=range] { width: 100%; accent-color: var(--green); }
+.chk { display: flex; align-items: center; gap: 12px; padding: 8px 0; font-size: 16px; }
+.chk input { width: 22px; height: 22px; accent-color: var(--green); }
+.sr { position: absolute; left: -9999px; }
+#wall { position: fixed; inset: 0; z-index: -1; background-size: cover; background-position: center; display: none; }
+#wall::after { content: ""; position: absolute; inset: 0; background: rgba(var(--wallrgb, 0, 0, 0), var(--walldim, .5)); }
+html.has-wall #wall { display: block; }
+html.has-wall .card, html.has-wall .stat, html.has-wall .verse { background: color-mix(in srgb, var(--surface) 90%, transparent); }
+.breathwrap { display: flex; justify-content: center; margin: 22px 0 18px; }
+.breath { width: 160px; height: 160px; margin: 0; border-radius: 50%; background: var(--sun-soft); border: 3px solid var(--sun); display: flex; align-items: center; justify-content: center; text-align: center; transform: scale(.7); animation: none; }
+.breath .bl { font-size: 20px; font-weight: 700; }
+.breath .bc { font-size: 38px; font-weight: 800; line-height: 1.1; }
 </style>
 </head>
 <body>
+<div id="wall" aria-hidden="true"></div>
 <div class="app">
   <header class="top">
-    <div>
-      <h1>Refugio</h1>
-      <p data-i18n="tagline"></p>
+    <div class="brand">
+      <div class="logo" id="logoBox"></div>
+      <div>
+        <h1>Refugio</h1>
+        <p data-i18n="tagline"></p>
+      </div>
     </div>
     <div class="tools">
       <button class="iconbtn" id="langBtn" type="button" aria-label="Cambiar idioma / Change language">English</button>
-      <button class="iconbtn" id="themeBtn" type="button" data-i18n="theme" data-i18n-aria="themeAria"></button>
+      <button class="iconbtn" id="settingsBtn" type="button" data-i18n="settingsBtn" data-i18n-aria="settingsAria"></button>
     </div>
   </header>
 
@@ -192,8 +245,31 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
         <div class="stat"><b id="relapses">0</b><span data-i18n="relapses"></span></div>
       </div>
 
-      <button class="btn sun" id="urgeBtn" type="button" data-i18n="urgeBtn"></button>
-      <button class="btn ghost" id="relapseBtn" type="button" data-i18n="relapseBtn"></button>
+      <div class="btnrow">
+        <button class="btn sun" id="urgeBtn" type="button" data-i18n="urgeBtn"></button>
+        <button class="info" type="button" data-info="urge" data-i18n-aria="infoUrgeAria">i</button>
+      </div>
+      <div class="btnrow">
+        <button class="btn ghost" id="relapseBtn" type="button" data-i18n="relapseBtn"></button>
+        <button class="info" type="button" data-info="rel" data-i18n-aria="infoRelAria">i</button>
+      </div>
+
+      <div class="card" id="moodCard" style="margin-top:18px">
+        <h2 data-i18n="moodT"></h2>
+        <p class="hint" id="moodHint" data-i18n="moodHint"></p>
+        <div class="moods" role="group" data-i18n-aria="moodAria">
+          <button class="mood" type="button" data-m="3" aria-pressed="false" data-i18n="moodGood"></button>
+          <button class="mood" type="button" data-m="2" aria-pressed="false" data-i18n="moodOk"></button>
+          <button class="mood" type="button" data-m="1" aria-pressed="false" data-i18n="moodHard"></button>
+        </div>
+        <div class="weekmood" id="weekMood"></div>
+        <p class="small" id="moodSummary"></p>
+      </div>
+
+      <div class="card">
+        <h2 data-i18n="dailyT"></h2>
+        <p style="margin:0" id="dailyMsg"></p>
+      </div>
 
       <div class="verse">
         <p id="phraseText"></p>
@@ -208,8 +284,15 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
     <div class="card">
       <h2 data-i18n="reasonsT"></h2>
       <p class="hint" data-i18n="reasonsHint"></p>
+      <p class="small" data-i18n="chipsLbl" style="margin:0 0 6px"></p>
+      <div class="chips" id="reasonChips"></div>
       <textarea id="reasonIn" data-i18n-ph="reasonPh" data-i18n-aria="reasonAria"></textarea>
       <div class="row"><button class="btn primary" id="addReason" type="button" data-i18n="reasonSave"></button></div>
+    </div>
+    <div class="card" id="reasonNext" hidden>
+      <h2 data-i18n="reasonNextT"></h2>
+      <p class="hint" data-i18n="reasonNextTxt"></p>
+      <button class="btn sun" id="goPlan" type="button" data-i18n="reasonNextBtn"></button>
     </div>
     <div class="card"><ul class="list" id="reasonList"></ul></div>
   </section>
@@ -225,8 +308,35 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
     <div class="card"><ul class="list" id="noteList"></ul></div>
   </section>
 
+  <!-- ORACIÓN / CALMA -->
+  <section class="view" id="v-oracion">
+    <div class="card">
+      <h2 id="prayTitle"></h2>
+      <p class="hint" id="prayHint"></p>
+      <div class="pray" id="prayList"></div>
+    </div>
+  </section>
+
   <!-- PLAN -->
   <section class="view" id="v-plan">
+    <div class="card" id="planCard">
+      <h2 data-i18n="planPT"></h2>
+      <p class="hint" data-i18n="planPHint"></p>
+      <div class="f" data-i18n="planWhyL"></div>
+      <div class="myreasons" id="planWhy"></div>
+      <div class="f" data-i18n="planTrigL"></div>
+      <div class="chips" id="planTrig"></div>
+      <div class="f" data-i18n="planActL"></div>
+      <div class="chips" id="planActs"></div>
+      <label class="f" for="planName" data-i18n="planPersonL"></label>
+      <input type="text" id="planName" maxlength="40" autocomplete="off" data-i18n-ph="planPersonNamePh">
+      <input type="text" id="planPhone" inputmode="tel" maxlength="20" autocomplete="off" data-i18n-ph="planPhonePh" style="margin-top:8px">
+      <label class="f" for="planPledge" data-i18n="planPledgeL"></label>
+      <textarea id="planPledge" data-i18n-ph="planPledgePh"></textarea>
+      <div class="row"><button class="btn primary" id="planSave" type="button" data-i18n="planSave"></button></div>
+      <p class="small" id="planMsg" role="status"></p>
+    </div>
+
     <div class="card">
       <h2 data-i18n="planT"></h2>
       <p class="hint" data-i18n="planHint"></p>
@@ -241,6 +351,45 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
       <p class="small" data-i18n="planHelp"></p>
     </div>
 
+  </section>
+</div>
+
+<nav class="tabs" data-i18n-aria="tabsAria">
+  <div class="in" role="tablist">
+    <button role="tab" aria-selected="true" data-v="hoy" type="button" data-i18n="tabHoy"></button>
+    <button role="tab" aria-selected="false" data-v="razones" type="button" data-i18n="tabReasons"></button>
+    <button role="tab" aria-selected="false" data-v="diario" type="button" data-i18n="tabDiary"></button>
+    <button role="tab" aria-selected="false" data-v="oracion" type="button" id="tabPrayer"></button>
+    <button role="tab" aria-selected="false" data-v="plan" type="button" data-i18n="tabPlan"></button>
+  </div>
+</nav>
+
+<!-- MOMENTO DIFÍCIL -->
+<div class="overlay" id="urgeOv" role="dialog" aria-modal="true" aria-labelledby="urgeTitle">
+  <div class="sheet">
+    <h2 id="urgeTitle"></h2>
+    <p class="hint" data-i18n="urgeHint"></p>
+    <div class="timer" id="timer">10:00</div>
+    <div class="breathwrap"><div class="breath" id="breath" aria-hidden="true"><div><div class="bl" id="breathLbl"></div><div class="bc" id="breathCnt"></div></div></div></div>
+    <p class="sr" id="breathLive" aria-live="polite"></p>
+    <p class="center small" data-i18n="breatheNote"></p>
+    <ol class="steps" id="urgeSteps"></ol>
+    <div class="myreasons" id="urgeFaith"></div>
+    <div class="myreasons" id="urgeReasons"></div>
+    <div id="urgeContact"></div>
+    <button class="btn primary" id="urgeDone" type="button" data-i18n="urgeDone"></button>
+    <button class="btn ghost" id="urgeClose" type="button" data-i18n="urgeClose"></button>
+  </div>
+</div>
+
+<!-- CONFIGURACIÓN -->
+<div class="overlay" id="setOv" role="dialog" aria-modal="true" aria-labelledby="setOvTitle">
+  <div class="sheet full">
+    <div class="sethead">
+      <h2 id="setOvTitle" data-i18n="setOvT"></h2>
+      <button class="iconbtn" id="setClose" type="button" data-i18n="setClose"></button>
+    </div>
+
     <div class="card">
       <h2 data-i18n="setT"></h2>
       <label class="f" for="setName" data-i18n="setNameLbl"></label>
@@ -249,6 +398,46 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
       <select id="setFaith"></select>
       <div class="row"><button class="btn primary" id="saveSet" type="button" data-i18n="setSave"></button></div>
       <p class="small" id="setMsg" role="status"></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="apT"></h2>
+      <div class="f" data-i18n="apThemeL"></div>
+      <div class="chips">
+        <button class="chip" id="themeDark" type="button" aria-pressed="false" data-i18n="apDark"></button>
+        <button class="chip" id="themeLight" type="button" aria-pressed="false" data-i18n="apLight"></button>
+      </div>
+      <div class="f" data-i18n="apPaletteL"></div>
+      <div class="chips" id="apPalettes"></div>
+      <div class="f" data-i18n="apCustomL"></div>
+      <div class="colrow">
+        <label class="clab"><span data-i18n="apAccentL"></span><input type="color" id="apAccent"></label>
+        <label class="clab"><span data-i18n="apDetailL"></span><input type="color" id="apDetail"></label>
+      </div>
+      <div class="row"><button class="btn ghost" id="apReset" type="button" data-i18n="apResetColors"></button></div>
+
+      <div class="f" data-i18n="apWallL"></div>
+      <input type="file" id="wallFile" accept="image/*" hidden>
+      <div class="row">
+        <button class="btn ghost" id="wallAdd" type="button" data-i18n="apWallAdd"></button>
+        <button class="btn ghost" id="wallRemove" type="button" data-i18n="apWallRemove"></button>
+      </div>
+      <label class="clab"><span data-i18n="apDimL"></span><input type="range" id="apDim" min="0" max="85"></label>
+
+      <div class="f" data-i18n="apLogoL"></div>
+      <input type="file" id="logoFile" accept="image/*" hidden>
+      <div class="row">
+        <button class="btn ghost" id="logoAdd" type="button" data-i18n="apLogoAdd"></button>
+        <button class="btn ghost" id="logoRemove" type="button" data-i18n="apLogoRemove"></button>
+      </div>
+      <p class="small" data-i18n="apImgNote"></p>
+      <p class="small" id="apMsg" role="status"></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="prefT"></h2>
+      <label class="chk"><input type="checkbox" id="chkWelcome"><span data-i18n="prefWelcome"></span></label>
+      <label class="chk"><input type="checkbox" id="chkVibe"><span data-i18n="prefVibe"></span></label>
     </div>
 
     <div class="card">
@@ -267,36 +456,6 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
       <p class="hint" data-i18n="dataHint"></p>
       <button class="btn ghost" id="wipeBtn" type="button" data-i18n="wipeBtn"></button>
     </div>
-  </section>
-</div>
-
-<nav class="tabs" data-i18n-aria="tabsAria">
-  <div class="in" role="tablist">
-    <button role="tab" aria-selected="true" data-v="hoy" type="button" data-i18n="tabHoy"></button>
-    <button role="tab" aria-selected="false" data-v="razones" type="button" data-i18n="tabReasons"></button>
-    <button role="tab" aria-selected="false" data-v="diario" type="button" data-i18n="tabDiary"></button>
-    <button role="tab" aria-selected="false" data-v="plan" type="button" data-i18n="tabPlan"></button>
-  </div>
-</nav>
-
-<!-- MOMENTO DIFÍCIL -->
-<div class="overlay" id="urgeOv" role="dialog" aria-modal="true" aria-labelledby="urgeTitle">
-  <div class="sheet">
-    <h2 id="urgeTitle"></h2>
-    <p class="hint" data-i18n="urgeHint"></p>
-    <div class="timer" id="timer">10:00</div>
-    <div class="breath" aria-hidden="true" data-i18n="breathe"></div>
-    <p class="center small" data-i18n="breatheNote"></p>
-    <ol class="steps">
-      <li data-i18n="urge1"></li>
-      <li data-i18n="urge2"></li>
-      <li data-i18n="urge3"></li>
-      <li id="urgeAct"></li>
-    </ol>
-    <div class="myreasons" id="urgeFaith"></div>
-    <div class="myreasons" id="urgeReasons"></div>
-    <button class="btn primary" id="urgeDone" type="button" data-i18n="urgeDone"></button>
-    <button class="btn ghost" id="urgeClose" type="button" data-i18n="urgeClose"></button>
   </div>
 </div>
 
@@ -319,6 +478,27 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
     <p class="small" id="cheerBest"></p>
     <button class="btn primary" id="cheerGo" type="button" data-i18n="cheerGo"></button>
     <button class="btn ghost" id="cheerDiary" type="button" data-i18n="cheerDiary"></button>
+  </div>
+</div>
+
+<!-- INFORMACIÓN -->
+<div class="overlay" id="infoOv" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet">
+    <h2 id="infoTitle"></h2>
+    <div id="infoBody" class="infobody"></div>
+    <button class="btn primary" id="infoClose" type="button" data-i18n="infoClose"></button>
+  </div>
+</div>
+
+<!-- BIENVENIDA -->
+<div class="overlay splash" id="welcomeOv" role="dialog" aria-modal="true" aria-labelledby="wsTitle">
+  <div class="sheet center">
+    <div class="splashlogo" id="splashLogo"></div>
+    <h2 id="wsTitle"></h2>
+    <p class="big" id="wsMsg" style="margin-top:12px"></p>
+    <p class="hint" id="wsMsg2"></p>
+    <div class="myreasons" id="wsVerse" style="text-align:left"></div>
+    <button class="btn primary" id="wsGo" type="button" data-i18n="wsGo"></button>
   </div>
 </div>
 
@@ -400,6 +580,66 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
       ],
       cheerBest: "Tu mejor racha, {b} días, sigue siendo tuya. Nadie te la quita.",
       cheerGo: "Seguir adelante", cheerDiary: "Escribir en mi diario",
+      "tabPrayer": "Oración",
+        "tabCalm": "Calma",
+        "prayT": "Oraciones y lecturas",
+        "prayHint": "Toca un título para leerlo. Úsalos cuando quieras, sobre todo en momentos difíciles.",
+        "calmT": "Ejercicios de calma",
+        "calmHint": "Toca un ejercicio para verlo. Puedes hacerlos en cualquier momento.",
+        "dailyT": "Mensaje de hoy",
+        "dailyMsgs": [
+          "Hoy no tienes que ser perfecto. Solo tienes que seguir.",
+          "Las decisiones pequeñas de hoy construyen la persona que quieres ser.",
+          "Si hoy te cuesta, está bien pedir ayuda. No tienes que cargar con todo solo o sola.",
+          "Cuida tu descanso, tu comida y tu ánimo. Todo está conectado.",
+          "Un impulso es como una ola: sube, llega a su punto máximo y baja.",
+          "Eres más que tus errores. Eres también cada intento de volver a empezar.",
+          "Hoy es buen día para hacer algo bueno por ti: salir a caminar, llamar a alguien, descansar.",
+          "Tu progreso no se mide solo en días, sino en cómo te tratas cuando es difícil.",
+          "Háblate como le hablarías a un buen amigo: con paciencia y sin juicio.",
+          "Ocupar tus manos y tu mente ayuda: lee, cocina, haz ejercicio, crea algo.",
+          "No estás solo ni sola en esto. Mucha gente lucha lo mismo y sigue adelante.",
+          "Anota hoy algo por lo que estés agradecido o agradecida. La gratitud cambia el ánimo.",
+          "Si llega un mal momento, cambia de lugar y respira. Ya has visto que pasa.",
+          "Cada día que eliges tu bienestar es un paso hacia la libertad."
+        ],
+        "moodT": "¿Cómo te sientes hoy?",
+        "moodHint": "Registrarlo toma un segundo y te ayuda a ver patrones.",
+        "moodAria": "Estado de ánimo de hoy",
+        "moodGood": "Bien",
+        "moodOk": "Regular",
+        "moodHard": "Difícil",
+        "moodThanks": "Gracias por registrarlo. Mañana puedes hacerlo de nuevo.",
+        "moodHardMsg": "Gracias por decírmelo. Los días difíciles también cuentan, y no tienes que pasarlos solo o sola. Si lo necesitas, el botón de arriba te acompaña.",
+        "moodSummary": "Esta semana: {g} bien, {o} regular, {h} difícil.",
+        "moodHeavy": "Ha sido una semana pesada. Considera hablar con alguien de confianza; pedir ayuda es de valientes.",
+        "moodEmpty": "Aún no hay registros esta semana.",
+        "msTitle": "¡{m} días!",
+        "msTitleN": "¡{m} días, {n}!",
+        "ms7": "Una semana completa. Lo más difícil es empezar, y ya lo hiciste.",
+        "ms14": "Dos semanas de constancia. Sigue a tu ritmo.",
+        "ms30": "Un mes entero. Estás construyendo algo nuevo.",
+        "ms60": "Dos meses. Tu determinación es real.",
+        "ms90": "Noventa días de constancia: un logro enorme.",
+        "ms180": "Medio año. Mira cuánto has crecido.",
+        "ms365": "¡Un año completo! Una victoria enorme. Felicidades.",
+      "infoUrgeAria": "Más información sobre el botón de momento difícil",
+        "infoRelAria": "Más información sobre el botón de tropiezo",
+        "infoClose": "Entendido",
+        "info_urgeT": "¿Para qué sirve «Estoy pasando un momento difícil»?",
+        "info_urgeB": [
+          "Úsalo cuando sientas un impulso o una tentación. Es tu botón de ayuda inmediata.",
+          "Al tocarlo se abre una pantalla de calma con: un temporizador de 10 minutos (la mayoría de los impulsos bajan en ese tiempo), una guía de respiración, acciones rápidas para cambiar de ambiente, un versículo o frase de tu fe y tus propias razones para cambiar.",
+          "Cuando el momento pase, toca «Ya pasó, lo superé». Eso suma a tu contador de impulsos superados.",
+          "Si te sientes en peligro o en crisis, busca ayuda de emergencia de tu país."
+        ],
+        "info_relT": "¿Para qué sirve «Tuve un tropiezo»?",
+        "info_relB": [
+          "Úsalo si recaíste. Es una forma de ser honesto u honesta contigo y volver a empezar, sin juicios.",
+          "Al confirmar, el contador de días vuelve a cero y comienza de nuevo desde hoy, pero tu mejor racha se conserva. El tropiezo se suma al número de reinicios.",
+          "La app te mostrará un mensaje de ánimo y podrás anotar en tu diario qué lo provocó, para prepararte mejor la próxima vez.",
+          "Un tropiezo no borra tu progreso: es parte del camino."
+        ],
       langBtn: "English", weekDays: ["D", "L", "M", "X", "J", "V", "S"], locale: "es"
     },
     en: {
@@ -461,9 +701,206 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
       ],
       cheerBest: "Your best streak, {b} days, is still yours. No one can take it away.",
       cheerGo: "Keep going", cheerDiary: "Write in my journal",
+      "tabPrayer": "Prayer",
+        "tabCalm": "Calm",
+        "prayT": "Prayers and readings",
+        "prayHint": "Tap a title to read it. Use them whenever you like, especially in hard moments.",
+        "calmT": "Calm exercises",
+        "calmHint": "Tap an exercise to view it. You can do them at any time.",
+        "dailyT": "Message of the day",
+        "dailyMsgs": [
+          "Today you don't have to be perfect. You just have to keep going.",
+          "The small decisions you make today build the person you want to be.",
+          "If today is hard, it's okay to ask for help. You don't have to carry it all alone.",
+          "Take care of your rest, your food and your mood. Everything is connected.",
+          "An urge is like a wave: it rises, reaches its peak and fades.",
+          "You are more than your mistakes. You are also every attempt to start again.",
+          "Today is a good day to do something good for yourself: take a walk, call someone, rest.",
+          "Your progress isn't measured only in days, but in how you treat yourself when it's hard.",
+          "Talk to yourself as you would to a good friend: with patience and without judgment.",
+          "Keeping your hands and mind busy helps: read, cook, exercise, create something.",
+          "You are not alone in this. Many people struggle with the same thing and keep going.",
+          "Write down something you're grateful for today. Gratitude changes your mood.",
+          "If a hard moment comes, change your surroundings and breathe. You've seen it pass.",
+          "Every day you choose your well-being is a step toward freedom."
+        ],
+        "moodT": "How are you feeling today?",
+        "moodHint": "Logging it takes a second and helps you see patterns.",
+        "moodAria": "Today's mood",
+        "moodGood": "Good",
+        "moodOk": "Okay",
+        "moodHard": "Hard",
+        "moodThanks": "Thanks for logging it. You can do it again tomorrow.",
+        "moodHardMsg": "Thank you for telling me. Hard days count too, and you don't have to go through them alone. If you need it, the button above is here for you.",
+        "moodSummary": "This week: {g} good, {o} okay, {h} hard.",
+        "moodHeavy": "It's been a heavy week. Consider talking to someone you trust; asking for help takes courage.",
+        "moodEmpty": "No entries yet this week.",
+        "msTitle": "{m} days!",
+        "msTitleN": "{m} days, {n}!",
+        "ms7": "A full week. The hardest part is starting, and you did.",
+        "ms14": "Two weeks of consistency. Keep going at your own pace.",
+        "ms30": "A whole month. You are building something new.",
+        "ms60": "Two months. Your determination is real.",
+        "ms90": "Ninety days of consistency: a huge achievement.",
+        "ms180": "Half a year. Look how much you've grown.",
+        "ms365": "A full year! A huge victory. Congratulations.",
+      "infoUrgeAria": "More information about the hard moment button",
+        "infoRelAria": "More information about the stumble button",
+        "infoClose": "Got it",
+        "info_urgeT": "What is “I'm having a hard moment” for?",
+        "info_urgeB": [
+          "Use it when you feel an urge or a temptation. It's your immediate help button.",
+          "When you tap it, a calm screen opens with: a 10-minute timer (most urges fade in that time), a breathing guide, quick actions to change your surroundings, a verse or phrase from your faith and your own reasons for changing.",
+          "When the moment passes, tap “It passed, I made it”. That adds to your counter of urges overcome.",
+          "If you feel in danger or in crisis, seek emergency help in your country."
+        ],
+        "info_relT": "What is “I stumbled” for?",
+        "info_relB": [
+          "Use it if you relapsed. It's a way to be honest with yourself and start again, without judgment.",
+          "When you confirm, the day counter goes back to zero and starts again from today, but your best streak is kept. The stumble is added to your number of restarts.",
+          "The app will show you an encouraging message and you can write in your journal what triggered it, to be better prepared next time.",
+          "A stumble doesn't erase your progress: it's part of the journey."
+        ],
       langBtn: "Español", weekDays: ["S", "M", "T", "W", "T", "F", "S"], locale: "en"
     }
   };
+
+  Object.assign(L.es, {
+  "wsTitle": "Te damos la bienvenida",
+  "wsTitleN": "Te damos la bienvenida, {n}",
+  "wsMsg": "Esta app está para ayudarte a sentirte mejor y a crecer como una persona de bien, un día a la vez.",
+  "wsMsg2": "Aquí no hay juicios. Cada paso que das cuenta.",
+  "wsGo": "Continuar",
+  "breatheIn": "Inhala",
+  "breatheOut": "Exhala",
+  "breatheNote": "Sigue el círculo: inhala 4 segundos por la nariz y exhala 6 segundos despacio. Exhalar más largo ayuda a que el cuerpo se relaje.",
+  "reasonsT": "¿Por qué quieres cambiar?",
+  "reasonsHint": "Piensa en lo que más te importa. Tu razón es tu fuerza en los momentos difíciles. Escríbela con tus palabras.",
+  "chipsLbl": "Ideas para empezar:",
+  "reasonNextT": "Ahora, armemos tu plan",
+  "reasonNextTxt": "Ya sabes por qué quieres cambiar. Con eso, vamos a crear un plan hecho para ti.",
+  "reasonNextBtn": "Crear mi plan",
+  "planT": "Consejos generales",
+  "planHint": "Estas ideas le ayudan a casi todas las personas.",
+  "planPT": "Mi plan personal",
+  "planPHint": "Un plan hecho con tus razones y tus propias decisiones. Puedes cambiarlo cuando quieras.",
+  "planWhyL": "Mi razón principal",
+  "planNoWhy": "Aún no has escrito por qué quieres cambiar. Empieza por ahí.",
+  "planNoWhyBtn": "Escribir mi razón",
+  "planTrigL": "Lo que suele provocar mis impulsos",
+  "planActL": "Cuando llegue un impulso, voy a…",
+  "planPersonL": "Una persona de confianza a quien acudir",
+  "planPersonNamePh": "Nombre",
+  "planPhonePh": "Teléfono (opcional)",
+  "planPledgeL": "Mi compromiso",
+  "planPledgePh": "Me comprometo a…",
+  "planSave": "Guardar mi plan",
+  "planSaved": "Plan guardado.",
+  "urgePlanL": "Tu compromiso:",
+  "urgeContactCall": "Llamar a {n}",
+  "urgeContactMsg": "Escribir a {n}",
+  "contactFallback": "mi persona de confianza",
+  "settingsBtn": "Ajustes",
+  "settingsAria": "Abrir configuración",
+  "setOvT": "Configuración",
+  "setClose": "Cerrar",
+  "apT": "Apariencia",
+  "apThemeL": "Tema",
+  "apDark": "Oscuro",
+  "apLight": "Claro",
+  "apPaletteL": "Paleta de colores",
+  "pal_bosque": "Bosque",
+  "pal_oceano": "Océano",
+  "pal_atardecer": "Atardecer",
+  "pal_violeta": "Violeta",
+  "pal_piedra": "Piedra",
+  "apCustomL": "Colores a mi gusto",
+  "apAccentL": "Color principal",
+  "apDetailL": "Color de detalle",
+  "apResetColors": "Restablecer colores",
+  "apWallL": "Fondo de pantalla",
+  "apWallAdd": "Elegir imagen",
+  "apWallRemove": "Quitar fondo",
+  "apDimL": "Oscurecer el fondo",
+  "apLogoL": "Logo",
+  "apLogoAdd": "Elegir imagen",
+  "apLogoRemove": "Quitar logo",
+  "apImgNote": "Tus imágenes se guardan solo en este teléfono. El ícono de tu pantalla de inicio lo define la tienda y no se puede cambiar desde la app.",
+  "apImgErr": "No se pudo usar esa imagen. Prueba con otra.",
+  "apSaved": "Guardado.",
+  "prefT": "Preferencias",
+  "prefWelcome": "Mostrar la bienvenida al abrir la app",
+  "prefVibe": "Vibración suave al respirar",
+  "wipeTxt": "Se eliminarán tu contador, razones, plan, diario, imágenes y ajustes de este dispositivo. No se puede deshacer."
+});
+  Object.assign(L.en, {
+  "wsTitle": "Welcome",
+  "wsTitleN": "Welcome, {n}",
+  "wsMsg": "This app is here to help you feel better and grow into a good person, one day at a time.",
+  "wsMsg2": "There is no judgment here. Every step you take counts.",
+  "wsGo": "Continue",
+  "breatheIn": "Inhale",
+  "breatheOut": "Exhale",
+  "breatheNote": "Follow the circle: inhale through your nose for 4 seconds and exhale slowly for 6. A longer exhale helps your body relax.",
+  "reasonsT": "Why do you want to change?",
+  "reasonsHint": "Think about what matters most to you. Your reason is your strength in hard moments. Write it in your own words.",
+  "chipsLbl": "Ideas to get started:",
+  "reasonNextT": "Now, let's build your plan",
+  "reasonNextTxt": "You know why you want to change. With that, let's create a plan made for you.",
+  "reasonNextBtn": "Create my plan",
+  "planT": "General tips",
+  "planHint": "These ideas help almost everyone.",
+  "planPT": "My personal plan",
+  "planPHint": "A plan made from your reasons and your own decisions. You can change it whenever you like.",
+  "planWhyL": "My main reason",
+  "planNoWhy": "You haven't written why you want to change yet. Start there.",
+  "planNoWhyBtn": "Write my reason",
+  "planTrigL": "What usually triggers my urges",
+  "planActL": "When an urge comes, I will…",
+  "planPersonL": "A trusted person to turn to",
+  "planPersonNamePh": "Name",
+  "planPhonePh": "Phone (optional)",
+  "planPledgeL": "My commitment",
+  "planPledgePh": "I commit to…",
+  "planSave": "Save my plan",
+  "planSaved": "Plan saved.",
+  "urgePlanL": "Your commitment:",
+  "urgeContactCall": "Call {n}",
+  "urgeContactMsg": "Message {n}",
+  "contactFallback": "my trusted person",
+  "settingsBtn": "Settings",
+  "settingsAria": "Open settings",
+  "setOvT": "Settings",
+  "setClose": "Close",
+  "apT": "Appearance",
+  "apThemeL": "Theme",
+  "apDark": "Dark",
+  "apLight": "Light",
+  "apPaletteL": "Color palette",
+  "pal_bosque": "Forest",
+  "pal_oceano": "Ocean",
+  "pal_atardecer": "Sunset",
+  "pal_violeta": "Violet",
+  "pal_piedra": "Stone",
+  "apCustomL": "My own colors",
+  "apAccentL": "Main color",
+  "apDetailL": "Accent color",
+  "apResetColors": "Reset colors",
+  "apWallL": "Wallpaper",
+  "apWallAdd": "Choose image",
+  "apWallRemove": "Remove wallpaper",
+  "apDimL": "Darken the background",
+  "apLogoL": "Logo",
+  "apLogoAdd": "Choose image",
+  "apLogoRemove": "Remove logo",
+  "apImgNote": "Your images are stored only on this phone. Your home screen icon is set by the store and can't be changed from the app.",
+  "apImgErr": "That image couldn't be used. Try another one.",
+  "apSaved": "Saved.",
+  "prefT": "Preferences",
+  "prefWelcome": "Show the welcome screen when opening the app",
+  "prefVibe": "Gentle vibration while breathing",
+  "wipeTxt": "Your counter, reasons, plan, journal, images and settings will be erased from this device. This can't be undone."
+});
 
   /* ================= FE / FAITH ================= */
   var FAITHS = {
@@ -569,9 +1006,403 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
       ]
     }
   };
+  var PRAY = {
+  "cristiana": [
+    {
+      "t": {
+        "es": "Padre Nuestro (Mateo 6:9-13)",
+        "en": "Our Father (Matthew 6:9-13)"
+      },
+      "b": {
+        "es": "Padre nuestro que estás en los cielos, santificado sea tu nombre.\nVenga tu reino.\nHágase tu voluntad, como en el cielo, así también en la tierra.\nEl pan nuestro de cada día dánoslo hoy.\nY perdónanos nuestras deudas, como también nosotros perdonamos a nuestros deudores.\nY no nos metas en tentación, mas líbranos del mal;\nporque tuyo es el reino, y el poder, y la gloria, por todos los siglos.\nAmén.\n\n(Reina-Valera 1909, ortografía actualizada)",
+        "en": "Our Father which art in heaven, Hallowed be thy name.\nThy kingdom come, Thy will be done in earth, as it is in heaven.\nGive us this day our daily bread.\nAnd forgive us our debts, as we forgive our debtors.\nAnd lead us not into temptation, but deliver us from evil:\nFor thine is the kingdom, and the power, and the glory, for ever.\nAmen.\n\n(KJV)"
+      }
+    },
+    {
+      "t": {
+        "es": "Salmo 23",
+        "en": "Psalm 23"
+      },
+      "b": {
+        "es": "Jehová es mi pastor; nada me faltará.\nEn lugares de delicados pastos me hará yacer;\njunto a aguas de reposo me pastoreará.\nConfortará mi alma;\nme guiará por sendas de justicia por amor de su nombre.\nAunque ande en valle de sombra de muerte, no temeré mal alguno,\nporque tú estarás conmigo;\ntu vara y tu cayado me infundirán aliento.\nAderezarás mesa delante de mí en presencia de mis angustiadores;\nunges mi cabeza con aceite; mi copa está rebosando.\nCiertamente el bien y la misericordia me seguirán todos los días de mi vida,\ny en la casa de Jehová moraré por largos días.\n\n(Reina-Valera 1909, ortografía actualizada)",
+        "en": "The LORD is my shepherd; I shall not want.\nHe maketh me to lie down in green pastures: he leadeth me beside the still waters.\nHe restoreth my soul: he leadeth me in the paths of righteousness for his name's sake.\nYea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.\nThou preparest a table before me in the presence of mine enemies: thou anointest my head with oil; my cup runneth over.\nSurely goodness and mercy shall follow me all the days of my life: and I will dwell in the house of the LORD for ever.\n\n(KJV)"
+      }
+    },
+    {
+      "t": {
+        "es": "Oración de la mañana",
+        "en": "Morning prayer"
+      },
+      "b": {
+        "es": "Gracias por este nuevo día.\nGuárdame de lo que me daña y guíame hacia lo bueno.\nQue mis ojos, mis pensamientos y mis decisiones te honren hoy.\nAmén.",
+        "en": "Thank you for this new day.\nKeep me from what harms me and guide me toward what is good.\nMay my eyes, my thoughts and my decisions honor you today.\nAmen."
+      }
+    },
+    {
+      "t": {
+        "es": "Oración en un momento de tentación",
+        "en": "Prayer in a moment of temptation"
+      },
+      "b": {
+        "es": "Señor, tú conoces mi lucha.\nHoy te pido fuerza para cuidar mi mirada y mi mente.\nCuando me sienta débil, recuérdame que no estoy solo ni sola.\nPerdóname por lo que ya pasó y dame un corazón limpio y ganas de empezar de nuevo.\nAmén.",
+        "en": "Lord, you know my struggle.\nToday I ask for strength to guard my eyes and my mind.\nWhen I feel weak, remind me that I am not alone.\nForgive me for what has already happened, and give me a clean heart and the will to begin again.\nAmen."
+      }
+    },
+    {
+      "t": {
+        "es": "Oración de la noche",
+        "en": "Evening prayer"
+      },
+      "b": {
+        "es": "Gracias por lo que hoy me diste.\nSi hoy fallé, perdóname; si hoy resistí, te lo agradezco.\nDame descanso y un mañana más fuerte.\nAmén.",
+        "en": "Thank you for what you gave me today.\nIf I failed today, forgive me; if I resisted, I thank you.\nGive me rest and a stronger tomorrow.\nAmen."
+      }
+    },
+    {
+      "t": {
+        "es": "Cuando tengo ansiedad",
+        "en": "When I feel anxious"
+      },
+      "b": {
+        "es": "«Por nada estéis afanosos, sino sean conocidas vuestras peticiones delante de Dios en toda oración y ruego, con hacimiento de gracias. Y la paz de Dios, que sobrepuja todo entendimiento, guardará vuestros corazones y vuestros entendimientos en Cristo Jesús.»\n— Filipenses 4:6-7\n\n«Echando toda vuestra solicitud sobre él, porque él tiene cuidado de vosotros.»\n— 1 Pedro 5:7\n\n(Reina-Valera 1909, ortografía actualizada)",
+        "en": "“Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.”\n— Philippians 4:6-7\n\n“Casting all your care upon him; for he careth for you.”\n— 1 Peter 5:7\n\n(KJV)"
+      }
+    },
+    {
+      "t": {
+        "es": "Cuando me siento solo o sola",
+        "en": "When I feel lonely"
+      },
+      "b": {
+        "es": "«Esforzaos y cobrad ánimo; no temáis, ni tengáis miedo de ellos, que Jehová tu Dios es el que va contigo; no te dejará, ni te desamparará.»\n— Deuteronomio 31:6\n\n«Y he aquí, yo estoy con vosotros todos los días, hasta el fin del mundo.»\n— Mateo 28:20\n\n(Reina-Valera 1909, ortografía actualizada)",
+        "en": "“Be strong and of a good courage, fear not, nor be afraid of them: for the LORD thy God, he it is that doth go with thee; he will not fail thee, nor forsake thee.”\n— Deuteronomy 31:6\n\n“And, lo, I am with you alway, even unto the end of the world.”\n— Matthew 28:20\n\n(KJV)"
+      }
+    },
+    {
+      "t": {
+        "es": "Cuando estoy cansado o cansada",
+        "en": "When I feel tired"
+      },
+      "b": {
+        "es": "«Y no nos cansemos de hacer bien; porque a su tiempo segaremos, si no hubiéremos desmayado.»\n— Gálatas 6:9\n\n«Mas los que esperan a Jehová tendrán nuevas fuerzas; levantarán alas como águilas; correrán, y no se cansarán.»\n— Isaías 40:31\n\n(Reina-Valera 1909, ortografía actualizada)",
+        "en": "“And let us not be weary in well doing: for in due season we shall reap, if we faint not.”\n— Galatians 6:9\n\n“They that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary.”\n— Isaiah 40:31\n\n(KJV)"
+      }
+    },
+    {
+      "t": {
+        "es": "Cuando siento tentación",
+        "en": "When I feel tempted"
+      },
+      "b": {
+        "es": "«Velad y orad, para que no entréis en tentación; el espíritu a la verdad está presto, pero la carne es débil.»\n— Mateo 26:41\n\n«Someteos pues a Dios; resistid al diablo, y de vosotros huirá.»\n— Santiago 4:7\n\n(Reina-Valera 1909, ortografía actualizada)",
+        "en": "“Watch and pray, that ye enter not into temptation: the spirit indeed is willing, but the flesh is weak.”\n— Matthew 26:41\n\n“Submit yourselves therefore to God. Resist the devil, and he will flee from you.”\n— James 4:7\n\n(KJV)"
+      }
+    },
+    {
+      "t": {
+        "es": "Cuando siento culpa o vergüenza",
+        "en": "When I feel guilt or shame"
+      },
+      "b": {
+        "es": "«Cuanto está lejos el oriente del occidente, hizo alejar de nosotros nuestras rebeliones.»\n— Salmo 103:12\n\n«Ahora, pues, ninguna condenación hay para los que están en Cristo Jesús.»\n— Romanos 8:1\n\n(Reina-Valera 1909, ortografía actualizada)",
+        "en": "“As far as the east is from the west, so far hath he removed our transgressions from us.”\n— Psalm 103:12\n\n“There is therefore now no condemnation to them which are in Christ Jesus.”\n— Romans 8:1\n\n(KJV)"
+      }
+    }
+  ],
+  "catolica": [
+    {
+      "t": {
+        "es": "Padre Nuestro",
+        "en": "Our Father"
+      },
+      "b": {
+        "es": "Padre nuestro, que estás en el cielo,\nsantificado sea tu Nombre;\nvenga a nosotros tu reino;\nhágase tu voluntad en la tierra como en el cielo.\nDanos hoy nuestro pan de cada día;\nperdona nuestras ofensas,\ncomo también nosotros perdonamos a los que nos ofenden;\nno nos dejes caer en la tentación,\ny líbranos del mal.\nAmén.",
+        "en": "Our Father, who art in heaven,\nhallowed be thy name;\nthy kingdom come;\nthy will be done on earth as it is in heaven.\nGive us this day our daily bread,\nand forgive us our trespasses\nas we forgive those who trespass against us;\nand lead us not into temptation,\nbut deliver us from evil.\nAmen."
+      }
+    },
+    {
+      "t": {
+        "es": "Ave María",
+        "en": "Hail Mary"
+      },
+      "b": {
+        "es": "Dios te salve, María, llena eres de gracia,\nel Señor es contigo;\nbendita tú eres entre todas las mujeres,\ny bendito es el fruto de tu vientre, Jesús.\nSanta María, Madre de Dios,\nruega por nosotros, pecadores,\nahora y en la hora de nuestra muerte.\nAmén.",
+        "en": "Hail Mary, full of grace,\nthe Lord is with thee;\nblessed art thou among women,\nand blessed is the fruit of thy womb, Jesus.\nHoly Mary, Mother of God,\npray for us sinners,\nnow and at the hour of our death.\nAmen."
+      }
+    },
+    {
+      "t": {
+        "es": "Salmo 23",
+        "en": "Psalm 23"
+      },
+      "b": {
+        "es": "Jehová es mi pastor; nada me faltará.\nEn lugares de delicados pastos me hará yacer;\njunto a aguas de reposo me pastoreará.\nConfortará mi alma;\nme guiará por sendas de justicia por amor de su nombre.\nAunque ande en valle de sombra de muerte, no temeré mal alguno,\nporque tú estarás conmigo;\ntu vara y tu cayado me infundirán aliento.\nAderezarás mesa delante de mí en presencia de mis angustiadores;\nunges mi cabeza con aceite; mi copa está rebosando.\nCiertamente el bien y la misericordia me seguirán todos los días de mi vida,\ny en la casa de Jehová moraré por largos días.\n\n(Reina-Valera 1909, ortografía actualizada)",
+        "en": "The LORD is my shepherd; I shall not want.\nHe maketh me to lie down in green pastures: he leadeth me beside the still waters.\nHe restoreth my soul: he leadeth me in the paths of righteousness for his name's sake.\nYea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.\nThou preparest a table before me in the presence of mine enemies: thou anointest my head with oil; my cup runneth over.\nSurely goodness and mercy shall follow me all the days of my life: and I will dwell in the house of the LORD for ever.\n\n(KJV)"
+      }
+    },
+    {
+      "t": {
+        "es": "Oración de la mañana",
+        "en": "Morning prayer"
+      },
+      "b": {
+        "es": "Gracias por este nuevo día.\nGuárdame de lo que me daña y guíame hacia lo bueno.\nQue mis ojos, mis pensamientos y mis decisiones te honren hoy.\nAmén.",
+        "en": "Thank you for this new day.\nKeep me from what harms me and guide me toward what is good.\nMay my eyes, my thoughts and my decisions honor you today.\nAmen."
+      }
+    },
+    {
+      "t": {
+        "es": "Oración en un momento de tentación",
+        "en": "Prayer in a moment of temptation"
+      },
+      "b": {
+        "es": "Señor, tú conoces mi lucha.\nHoy te pido fuerza para cuidar mi mirada y mi mente.\nCuando me sienta débil, recuérdame que no estoy solo ni sola.\nPerdóname por lo que ya pasó y dame un corazón limpio y ganas de empezar de nuevo.\nAmén.",
+        "en": "Lord, you know my struggle.\nToday I ask for strength to guard my eyes and my mind.\nWhen I feel weak, remind me that I am not alone.\nForgive me for what has already happened, and give me a clean heart and the will to begin again.\nAmen."
+      }
+    },
+    {
+      "t": {
+        "es": "Oración de la noche",
+        "en": "Evening prayer"
+      },
+      "b": {
+        "es": "Gracias por lo que hoy me diste.\nSi hoy fallé, perdóname; si hoy resistí, te lo agradezco.\nDame descanso y un mañana más fuerte.\nAmén.",
+        "en": "Thank you for what you gave me today.\nIf I failed today, forgive me; if I resisted, I thank you.\nGive me rest and a stronger tomorrow.\nAmen."
+      }
+    },
+    {
+      "t": {
+        "es": "Cuando tengo ansiedad",
+        "en": "When I feel anxious"
+      },
+      "b": {
+        "es": "«Por nada estéis afanosos, sino sean conocidas vuestras peticiones delante de Dios en toda oración y ruego, con hacimiento de gracias. Y la paz de Dios, que sobrepuja todo entendimiento, guardará vuestros corazones y vuestros entendimientos en Cristo Jesús.»\n— Filipenses 4:6-7\n\n«Echando toda vuestra solicitud sobre él, porque él tiene cuidado de vosotros.»\n— 1 Pedro 5:7\n\n(Reina-Valera 1909, ortografía actualizada)",
+        "en": "“Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.”\n— Philippians 4:6-7\n\n“Casting all your care upon him; for he careth for you.”\n— 1 Peter 5:7\n\n(KJV)"
+      }
+    },
+    {
+      "t": {
+        "es": "Cuando me siento solo o sola",
+        "en": "When I feel lonely"
+      },
+      "b": {
+        "es": "«Esforzaos y cobrad ánimo; no temáis, ni tengáis miedo de ellos, que Jehová tu Dios es el que va contigo; no te dejará, ni te desamparará.»\n— Deuteronomio 31:6\n\n«Y he aquí, yo estoy con vosotros todos los días, hasta el fin del mundo.»\n— Mateo 28:20\n\n(Reina-Valera 1909, ortografía actualizada)",
+        "en": "“Be strong and of a good courage, fear not, nor be afraid of them: for the LORD thy God, he it is that doth go with thee; he will not fail thee, nor forsake thee.”\n— Deuteronomy 31:6\n\n“And, lo, I am with you alway, even unto the end of the world.”\n— Matthew 28:20\n\n(KJV)"
+      }
+    },
+    {
+      "t": {
+        "es": "Cuando estoy cansado o cansada",
+        "en": "When I feel tired"
+      },
+      "b": {
+        "es": "«Y no nos cansemos de hacer bien; porque a su tiempo segaremos, si no hubiéremos desmayado.»\n— Gálatas 6:9\n\n«Mas los que esperan a Jehová tendrán nuevas fuerzas; levantarán alas como águilas; correrán, y no se cansarán.»\n— Isaías 40:31\n\n(Reina-Valera 1909, ortografía actualizada)",
+        "en": "“And let us not be weary in well doing: for in due season we shall reap, if we faint not.”\n— Galatians 6:9\n\n“They that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary.”\n— Isaiah 40:31\n\n(KJV)"
+      }
+    },
+    {
+      "t": {
+        "es": "Cuando siento tentación",
+        "en": "When I feel tempted"
+      },
+      "b": {
+        "es": "«Velad y orad, para que no entréis en tentación; el espíritu a la verdad está presto, pero la carne es débil.»\n— Mateo 26:41\n\n«Someteos pues a Dios; resistid al diablo, y de vosotros huirá.»\n— Santiago 4:7\n\n(Reina-Valera 1909, ortografía actualizada)",
+        "en": "“Watch and pray, that ye enter not into temptation: the spirit indeed is willing, but the flesh is weak.”\n— Matthew 26:41\n\n“Submit yourselves therefore to God. Resist the devil, and he will flee from you.”\n— James 4:7\n\n(KJV)"
+      }
+    },
+    {
+      "t": {
+        "es": "Cuando siento culpa o vergüenza",
+        "en": "When I feel guilt or shame"
+      },
+      "b": {
+        "es": "«Cuanto está lejos el oriente del occidente, hizo alejar de nosotros nuestras rebeliones.»\n— Salmo 103:12\n\n«Ahora, pues, ninguna condenación hay para los que están en Cristo Jesús.»\n— Romanos 8:1\n\n(Reina-Valera 1909, ortografía actualizada)",
+        "en": "“As far as the east is from the west, so far hath he removed our transgressions from us.”\n— Psalm 103:12\n\n“There is therefore now no condemnation to them which are in Christ Jesus.”\n— Romans 8:1\n\n(KJV)"
+      }
+    }
+  ],
+  "islam": [
+    {
+      "t": {
+        "es": "Pedir perdón (istighfar)",
+        "en": "Asking forgiveness (istighfar)"
+      },
+      "b": {
+        "es": "Astaghfirullah\n\nSignifica: «Pido perdón a Allah».\nRepítelo con calma y con el corazón presente. Allah ama a quienes vuelven a Él.",
+        "en": "Astaghfirullah\n\nIt means: “I seek forgiveness from Allah.”\nRepeat it calmly and with a present heart. Allah loves those who return to Him."
+      }
+    },
+    {
+      "t": {
+        "es": "Recuerdo de Allah (dhikr)",
+        "en": "Remembrance of Allah (dhikr)"
+      },
+      "b": {
+        "es": "SubhanAllah: glorificado sea Allah.\nAlhamdulillah: alabado sea Allah.\nAllahu Akbar: Allah es el más grande.\n\nRepite cada uno 33 veces, o las que puedas. Recordar a Allah da calma al corazón.",
+        "en": "SubhanAllah: glory be to Allah.\nAlhamdulillah: praise be to Allah.\nAllahu Akbar: Allah is the greatest.\n\nRepeat each one 33 times, or as many as you can. Remembering Allah brings calm to the heart."
+      }
+    },
+    {
+      "t": {
+        "es": "Súplica (dua) con mis palabras",
+        "en": "Supplication (dua) in my own words"
+      },
+      "b": {
+        "es": "Oh Allah, tú conoces mi lucha y mi debilidad.\nProtege mi mirada y mi corazón, purifícame y dame fuerza para alejarme de lo que te desagrada.\nPerdona mis errores y acepta mi arrepentimiento.\nAmín.",
+        "en": "O Allah, You know my struggle and my weakness.\nProtect my gaze and my heart, purify me, and give me strength to stay away from what displeases You.\nForgive my mistakes and accept my repentance.\nAmeen."
+      }
+    },
+    {
+      "t": {
+        "es": "Un paso práctico",
+        "en": "A practical step"
+      },
+      "b": {
+        "es": "Haz wudu, cambia de lugar y, si puedes, ora dos rakat. Después anota cómo te sientes.",
+        "en": "Make wudu, change your surroundings and, if you can, pray two rakat. Then write down how you feel."
+      }
+    }
+  ],
+  "judia": [
+    {
+      "t": {
+        "es": "Shemá",
+        "en": "Shema"
+      },
+      "b": {
+        "es": "Shemá Israel, Adonái Elohénu, Adonái Ejad.\n\n«Escucha, Israel: el Eterno es nuestro Dios, el Eterno es uno.»",
+        "en": "Shema Yisrael, Adonai Eloheinu, Adonai Echad.\n\n“Hear, O Israel: the Eternal is our God, the Eternal is One.”"
+      }
+    },
+    {
+      "t": {
+        "es": "Modé Aní (al despertar)",
+        "en": "Modeh Ani (upon waking)"
+      },
+      "b": {
+        "es": "Modé aní lefanéja, Mélej jai vekayám, shehejezárta bí nishmatí bejemlá; rabá emunatéja.\n\n«Te doy gracias, Rey vivo y eterno, por devolverme mi alma con compasión. Grande es tu fidelidad.»",
+        "en": "Modeh ani lefanecha, Melech chai vekayam, shehechezarta bi nishmati bechemla; rabba emunatecha.\n\n“I give thanks before You, living and eternal King, for returning my soul to me with compassion. Great is Your faithfulness.”"
+      }
+    },
+    {
+      "t": {
+        "es": "Salmo 23",
+        "en": "Psalm 23"
+      },
+      "b": {
+        "es": "Jehová es mi pastor; nada me faltará.\nEn lugares de delicados pastos me hará yacer;\njunto a aguas de reposo me pastoreará.\nConfortará mi alma;\nme guiará por sendas de justicia por amor de su nombre.\nAunque ande en valle de sombra de muerte, no temeré mal alguno,\nporque tú estarás conmigo;\ntu vara y tu cayado me infundirán aliento.\nAderezarás mesa delante de mí en presencia de mis angustiadores;\nunges mi cabeza con aceite; mi copa está rebosando.\nCiertamente el bien y la misericordia me seguirán todos los días de mi vida,\ny en la casa de Jehová moraré por largos días.\n\n(Reina-Valera 1909, ortografía actualizada)",
+        "en": "The LORD is my shepherd; I shall not want.\nHe maketh me to lie down in green pastures: he leadeth me beside the still waters.\nHe restoreth my soul: he leadeth me in the paths of righteousness for his name's sake.\nYea, though I walk through the valley of the shadow of death, I will fear no evil: for thou art with me; thy rod and thy staff they comfort me.\nThou preparest a table before me in the presence of mine enemies: thou anointest my head with oil; my cup runneth over.\nSurely goodness and mercy shall follow me all the days of my life: and I will dwell in the house of the LORD for ever.\n\n(KJV)"
+      }
+    },
+    {
+      "t": {
+        "es": "Oración con mis palabras",
+        "en": "Prayer in my own words"
+      },
+      "b": {
+        "es": "Eterno, tú conoces mi lucha.\nDame fuerza para cuidar mi mirada y mi mente.\nPerdona lo que ya pasó y ayúdame a volver a empezar.\nAmén.",
+        "en": "Eternal One, You know my struggle.\nGive me strength to guard my eyes and my mind.\nForgive what has already happened and help me begin again.\nAmen."
+      }
+    },
+    {
+      "t": {
+        "es": "Teshuvá en cuatro pasos",
+        "en": "Teshuvah in four steps"
+      },
+      "b": {
+        "es": "1. Reconoce lo que pasó, sin castigarte.\n2. Siente un pesar sincero.\n3. Decide un cambio concreto para la próxima vez.\n4. Vuelve a empezar hoy.\n\nVolver siempre es posible.",
+        "en": "1. Acknowledge what happened, without punishing yourself.\n2. Feel sincere regret.\n3. Decide one concrete change for next time.\n4. Begin again today.\n\nReturning is always possible."
+      }
+    }
+  ],
+  "espiritual": [
+    {
+      "t": {
+        "es": "Respiración 4-6",
+        "en": "4-6 breathing"
+      },
+      "b": {
+        "es": "Inhala por la nariz contando hasta 4.\nExhala despacio por la boca contando hasta 6.\nRepite 10 veces, con los hombros relajados.",
+        "en": "Inhale through your nose, counting to 4.\nExhale slowly through your mouth, counting to 6.\nRepeat 10 times, with your shoulders relaxed."
+      }
+    },
+    {
+      "t": {
+        "es": "Gratitud en dos minutos",
+        "en": "Two-minute gratitude"
+      },
+      "b": {
+        "es": "Piensa en tres cosas buenas de hoy: una persona, un momento y algo tuyo.\nRespira y siente agradecimiento por cada una.\nLa gratitud calma el deseo y mejora el ánimo.",
+        "en": "Think of three good things from today: a person, a moment, and something about yourself.\nBreathe and feel thankful for each one.\nGratitude calms desire and lifts your mood."
+      }
+    },
+    {
+      "t": {
+        "es": "Surfear el impulso",
+        "en": "Surfing the urge"
+      },
+      "b": {
+        "es": "Imagina el impulso como una ola.\nObsérvalo sin pelear: ¿dónde lo sientes en el cuerpo?\nRespira.\nSube, llega a su punto máximo y baja solo, normalmente en 10 a 20 minutos.",
+        "en": "Imagine the urge as a wave.\nWatch it without fighting: where do you feel it in your body?\nBreathe.\nIt rises, reaches its peak and fades on its own, usually within 10 to 20 minutes."
+      }
+    },
+    {
+      "t": {
+        "es": "Carta a tu yo del futuro",
+        "en": "Letter to your future self"
+      },
+      "b": {
+        "es": "Escribe dos o tres frases a la persona que serás dentro de un año.\nCuéntale por qué empezaste y qué esperas de ella.\nGuárdala en tu diario y léela cuando lo necesites.",
+        "en": "Write two or three sentences to the person you will be a year from now.\nTell them why you started and what you hope for them.\nSave it in your journal and read it when you need it."
+      }
+    }
+  ],
+  "ninguna": [
+    {
+      "t": {
+        "es": "Respiración 4-6",
+        "en": "4-6 breathing"
+      },
+      "b": {
+        "es": "Inhala por la nariz contando hasta 4.\nExhala despacio por la boca contando hasta 6.\nRepite 10 veces, con los hombros relajados.",
+        "en": "Inhale through your nose, counting to 4.\nExhale slowly through your mouth, counting to 6.\nRepeat 10 times, with your shoulders relaxed."
+      }
+    },
+    {
+      "t": {
+        "es": "Gratitud en dos minutos",
+        "en": "Two-minute gratitude"
+      },
+      "b": {
+        "es": "Piensa en tres cosas buenas de hoy: una persona, un momento y algo tuyo.\nRespira y siente agradecimiento por cada una.\nLa gratitud calma el deseo y mejora el ánimo.",
+        "en": "Think of three good things from today: a person, a moment, and something about yourself.\nBreathe and feel thankful for each one.\nGratitude calms desire and lifts your mood."
+      }
+    },
+    {
+      "t": {
+        "es": "Surfear el impulso",
+        "en": "Surfing the urge"
+      },
+      "b": {
+        "es": "Imagina el impulso como una ola.\nObsérvalo sin pelear: ¿dónde lo sientes en el cuerpo?\nRespira.\nSube, llega a su punto máximo y baja solo, normalmente en 10 a 20 minutos.",
+        "en": "Imagine the urge as a wave.\nWatch it without fighting: where do you feel it in your body?\nBreathe.\nIt rises, reaches its peak and fades on its own, usually within 10 to 20 minutes."
+      }
+    },
+    {
+      "t": {
+        "es": "Carta a tu yo del futuro",
+        "en": "Letter to your future self"
+      },
+      "b": {
+        "es": "Escribe dos o tres frases a la persona que serás dentro de un año.\nCuéntale por qué empezaste y qué esperas de ella.\nGuárdala en tu diario y léela cuando lo necesites.",
+        "en": "Write two or three sentences to the person you will be a year from now.\nTell them why you started and what you hope for them.\nSave it in your journal and read it when you need it."
+      }
+    }
+  ]
+};
   var FAITH_ORDER = ["cristiana", "catolica", "islam", "judia", "espiritual", "ninguna"];
 
-  var state = { start: null, best: 0, relapses: [], urges: 0, reasons: [], notes: [], name: "", faith: "cristiana", pin: "", phraseIdx: 0, lang: "", theme: "dark" };
+  var state = { start: null, best: 0, relapses: [], urges: 0, reasons: [], notes: [], name: "", faith: "cristiana", pin: "", phraseIdx: 0, lang: "", theme: "dark", moods: {}, seen: [], plan: { triggers: [], actions: [], name: "", phone: "", pledge: "" }, appear: { palette: "bosque", accent: "", detail: "", dim: 50, hasWall: false, hasLogo: false }, showWelcome: true, vibe: true };
 
   function load() {
     try {
@@ -579,6 +1410,10 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
       if (raw) { var s = JSON.parse(raw); for (var k in state) if (s[k] !== undefined) state[k] = s[k]; }
     } catch (e) {}
     if (!FAITHS[state.faith]) state.faith = "cristiana";
+    state.plan = Object.assign({ triggers: [], actions: [], name: "", phone: "", pledge: "" }, state.plan || {});
+    if (!Array.isArray(state.plan.triggers)) state.plan.triggers = [];
+    if (!Array.isArray(state.plan.actions)) state.plan.actions = [];
+    state.appear = Object.assign({ palette: "bosque", accent: "", detail: "", dim: 50, hasWall: false, hasLogo: false }, state.appear || {});
     if (state.theme !== "light" && state.theme !== "dark") state.theme = "dark";
     document.documentElement.setAttribute("data-theme", state.theme);
     if (state.lang !== "es" && state.lang !== "en") {
@@ -625,6 +1460,7 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
     applyStatic();
     fillFaith($("faithIn"), $("faithIn").value || state.faith);
     fillFaith($("setFaith"), state.faith);
+    renderReasonChips(); renderPalettes();
     render(); renderReasons(); renderNotes(); syncSettings();
   }
 
@@ -645,6 +1481,8 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
     return nm() ? g + ", " + nm() : g;
   }
   function render() {
+    renderPrayers();
+    renderPlan();
     var has = !!state.start;
     $("welcome").hidden = has;
     $("dash").hidden = !has;
@@ -685,6 +1523,7 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
       cell.appendChild(dot); cell.appendChild(lb); wk.appendChild(cell);
     }
     showPhrase();
+    renderDaily(); renderMood(); checkMilestone(n);
   }
 
   /* ---------- listas ---------- */
@@ -701,10 +1540,13 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
       li.appendChild(p); li.appendChild(x); ul.appendChild(li);
     });
   }
-  function renderReasons() { renderList($("reasonList"), state.reasons, t("reasonEmpty"), false, function (i) { state.reasons.splice(i, 1); save(); renderReasons(); }); }
+  function renderReasons() {
+    renderList($("reasonList"), state.reasons, t("reasonEmpty"), false, function (i) { state.reasons.splice(i, 1); save(); renderReasons(); renderPlan(); });
+    $("reasonNext").hidden = !state.reasons.length;
+  }
   function renderNotes() { renderList($("noteList"), state.notes, t("noteEmpty"), true, function (i) { state.notes.splice(i, 1); save(); renderNotes(); }); }
 
-  $("addReason").addEventListener("click", function () { var v = $("reasonIn").value.trim(); if (!v) return; state.reasons.unshift(v); $("reasonIn").value = ""; save(); renderReasons(); });
+  $("addReason").addEventListener("click", function () { var v = $("reasonIn").value.trim(); if (!v) return; state.reasons.unshift(v); $("reasonIn").value = ""; save(); renderReasons(); renderPlan(); });
   $("addNote").addEventListener("click", function () { var v = $("noteIn").value.trim(); if (!v) return; state.notes.unshift({ d: new Date().toISOString(), t: v }); $("noteIn").value = ""; save(); renderNotes(); });
 
   /* ---------- navegación ---------- */
@@ -735,17 +1577,90 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
     if ($("urgeOv").classList.contains("on")) openUrge(true);
   });
 
-  /* ---------- ánimo tras un tropiezo ---------- */
-  function showCheer() {
-    $("cheerTitle").textContent = nm() ? t("cheerTitleN", { n: nm() }) : t("cheerTitle");
-    var msgs = t("cheerMsgs");
-    $("cheerMsg").textContent = msgs[Math.floor(Math.random() * msgs.length)];
+  /* ---------- oraciones ---------- */
+  var prayKey = "";
+  function renderPrayers() {
+    var calm = state.faith === "espiritual" || state.faith === "ninguna";
+    $("tabPrayer").textContent = calm ? t("tabCalm") : t("tabPrayer");
+    $("prayTitle").textContent = calm ? t("calmT") : t("prayT");
+    $("prayHint").textContent = calm ? t("calmHint") : t("prayHint");
+    var key = state.faith + "|" + state.lang;
+    if (key === prayKey) return;
+    prayKey = key;
+    var box = $("prayList"); box.innerHTML = "";
+    (PRAY[state.faith] || []).forEach(function (it) {
+      var d = document.createElement("details");
+      var sm = document.createElement("summary"); sm.textContent = it.t[state.lang];
+      var b = document.createElement("div"); b.className = "pbody"; b.textContent = it.b[state.lang];
+      d.appendChild(sm); d.appendChild(b); box.appendChild(d);
+    });
+  }
+
+  /* ---------- mensaje diario ---------- */
+  function renderDaily() {
+    var msgs = t("dailyMsgs");
+    var now = new Date();
+    var doy = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 864e5);
+    $("dailyMsg").textContent = msgs[doy % msgs.length];
+  }
+
+  /* ---------- estado de ánimo ---------- */
+  function renderMood() {
+    var today = iso(new Date());
+    var cur = state.moods[today] || 0;
+    document.querySelectorAll(".mood").forEach(function (b) { b.setAttribute("aria-pressed", String(+b.getAttribute("data-m") === cur)); });
+    var wm = $("weekMood"); wm.innerHTML = "";
+    var names = t("weekDays"), c = { 1: 0, 2: 0, 3: 0 };
+    for (var d = 6; d >= 0; d--) {
+      var dt = new Date(); dt.setDate(dt.getDate() - d);
+      var v = state.moods[iso(dt)] || 0; if (v) c[v]++;
+      var col = document.createElement("div"); col.className = "wm";
+      var bar = document.createElement("div"); bar.className = "bar m" + v;
+      var lb = document.createElement("span"); lb.textContent = names[dt.getDay()];
+      col.appendChild(bar); col.appendChild(lb); wm.appendChild(col);
+    }
+    var total = c[1] + c[2] + c[3];
+    var sum = total ? t("moodSummary", { g: c[3], o: c[2], h: c[1] }) : t("moodEmpty");
+    if (c[1] >= 3) sum += " " + t("moodHeavy");
+    $("moodSummary").textContent = sum;
+  }
+  document.querySelectorAll(".mood").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var m = +b.getAttribute("data-m");
+      state.moods[iso(new Date())] = m; save(); renderMood();
+      $("moodHint").textContent = m === 1 ? t("moodHardMsg") : t("moodThanks");
+    });
+  });
+
+  /* ---------- metas ---------- */
+  function checkMilestone(n) {
+    if ($("lockOv").classList.contains("on")) return;
+    var hit = 0;
+    MILESTONES.forEach(function (m) { if (n >= m && state.seen.indexOf(m) === -1) hit = m; });
+    if (!hit) return;
+    MILESTONES.forEach(function (m) { if (m <= hit && state.seen.indexOf(m) === -1) state.seen.push(m); });
+    save(); showCheer(hit);
+  }
+
+  /* ---------- ánimo: tropiezo o meta ---------- */
+  function showCheer(m) {
+    var ms = typeof m === "number";
+    if (ms) {
+      $("cheerTitle").textContent = nm() ? t("msTitleN", { m: m, n: nm() }) : t("msTitle", { m: m });
+      $("cheerMsg").textContent = t("ms" + m);
+      $("cheerBest").textContent = "";
+    } else {
+      $("cheerTitle").textContent = nm() ? t("cheerTitleN", { n: nm() }) : t("cheerTitle");
+      var msgs = t("cheerMsgs");
+      $("cheerMsg").textContent = msgs[Math.floor(Math.random() * msgs.length)];
+      $("cheerBest").textContent = state.best > 0 ? t("cheerBest", { b: state.best }) : "";
+    }
+    $("cheerDiary").style.display = ms ? "none" : "block";
     var vb = $("cheerVerse"); vb.innerHTML = "";
     var list = FAITHS[state.faith].phrases;
     var p = list[Math.floor(Math.random() * list.length)][state.lang];
     var vp = document.createElement("p"); vp.className = "faithline"; vp.textContent = withName(p[0]); vb.appendChild(vp);
     if (p[1]) { var rp = document.createElement("p"); rp.className = "small"; rp.textContent = p[1]; vb.appendChild(rp); }
-    $("cheerBest").textContent = state.best > 0 ? t("cheerBest", { b: state.best }) : "";
     $("cheerOv").classList.add("on");
   }
   $("cheerGo").addEventListener("click", function () { $("cheerOv").classList.remove("on"); window.scrollTo(0, 0); });
@@ -754,6 +1669,18 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
     var tab = document.querySelector('nav.tabs button[data-v="diario"]'); if (tab) tab.click();
     setTimeout(function () { $("noteIn").focus(); }, 50);
   });
+
+  /* ---------- información de los botones ---------- */
+  document.querySelectorAll(".info").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var k = b.getAttribute("data-info");
+      $("infoTitle").textContent = t("info_" + k + "T");
+      var box = $("infoBody"); box.innerHTML = "";
+      t("info_" + k + "B").forEach(function (txt) { var p = document.createElement("p"); p.textContent = txt; box.appendChild(p); });
+      $("infoOv").classList.add("on");
+    });
+  });
+  $("infoClose").addEventListener("click", function () { $("infoOv").classList.remove("on"); });
 
   /* ---------- confirmación ---------- */
   var confCb = null;
@@ -765,15 +1692,16 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
     confirmBox(
       nm() ? t("relTN", { n: nm() }) : t("relT"),
       t("relTxt"), t("relYes"),
-      function () { var n0 = streak(); if (n0 > state.best) state.best = n0; var d = iso(new Date()); if (state.relapses.indexOf(d) === -1) state.relapses.push(d); state.start = d; save(); render(); showCheer(); }
+      function () { var n0 = streak(); if (n0 > state.best) state.best = n0; var d = iso(new Date()); if (state.relapses.indexOf(d) === -1) state.relapses.push(d); state.start = d; state.seen = []; save(); render(); showCheer(); }
     );
   });
 
   function wipe() {
     var keepLang = state.lang, keepTheme = state.theme;
-    state = { start: null, best: 0, relapses: [], urges: 0, reasons: [], notes: [], name: "", faith: "cristiana", pin: "", phraseIdx: 0, lang: keepLang, theme: keepTheme };
+    state = { start: null, best: 0, relapses: [], urges: 0, reasons: [], notes: [], name: "", faith: "cristiana", pin: "", phraseIdx: 0, lang: keepLang, theme: keepTheme, moods: {}, seen: [], plan: { triggers: [], actions: [], name: "", phone: "", pledge: "" }, appear: { palette: "bosque", accent: "", detail: "", dim: 50, hasWall: false, hasLogo: false }, showWelcome: true, vibe: true };
     try { localStorage.removeItem(KEY); localStorage.removeItem(OLD); } catch (e) {}
     save(); $("nameIn").value = "";
+    dbClear(); freeMedia(); applyAppearance(); applyLogo();
     applyLang();
   }
   $("wipeBtn").addEventListener("click", function () { confirmBox(t("wipeT"), t("wipeTxt"), t("wipeYes"), wipe); });
@@ -784,7 +1712,26 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
   function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
   function openUrge(keepTimer) {
     $("urgeTitle").textContent = nm() ? t("urgeTitleN", { n: nm() }) : t("urgeTitle");
-    $("urgeAct").textContent = FAITHS[state.faith].act[state.lang];
+    var st = $("urgeSteps"); st.innerHTML = "";
+    var mine = (state.plan.actions || []).map(actLabel).filter(Boolean);
+    (mine.length ? mine : [t("urge1"), t("urge2"), t("urge3")]).concat([FAITHS[state.faith].act[state.lang]]).forEach(function (txt) {
+      var li = document.createElement("li"); li.textContent = txt; st.appendChild(li);
+    });
+    var cb = $("urgeContact"); cb.innerHTML = "";
+    var pl = state.plan;
+    if (pl.pledge) {
+      var pm = document.createElement("div"); pm.className = "myreasons";
+      var pb = document.createElement("p"); var pbb = document.createElement("b"); pbb.textContent = t("urgePlanL"); pb.appendChild(pbb); pm.appendChild(pb);
+      var pq = document.createElement("p"); pq.className = "faithline"; pq.textContent = pl.pledge; pm.appendChild(pq); cb.appendChild(pm);
+    }
+    var tel = (pl.phone || "").replace(/[^\d+]/g, "");
+    if (tel.length >= 5) {
+      var who = pl.name || t("contactFallback");
+      var ac = document.createElement("a"); ac.className = "btn ghost"; ac.href = "tel:" + tel; ac.textContent = t("urgeContactCall", { n: who });
+      var am = document.createElement("a"); am.className = "btn ghost"; am.href = "sms:" + tel; am.textContent = t("urgeContactMsg", { n: who }); am.style.marginTop = "8px";
+      cb.appendChild(ac); cb.appendChild(am);
+      cb.style.marginBottom = "12px";
+    }
 
     var fb = $("urgeFaith"); fb.innerHTML = "";
     var list = FAITHS[state.faith].phrases;
@@ -802,10 +1749,11 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
     if (keepTimer !== true) {
       remaining = 600; paintTimer(); stopTimer();
       timerId = setInterval(function () { remaining -= 1; if (remaining <= 0) { remaining = 0; stopTimer(); } paintTimer(); }, 1000);
+      startBreath();
     }
     $("urgeOv").classList.add("on");
   }
-  function closeUrge() { stopTimer(); $("urgeOv").classList.remove("on"); }
+  function closeUrge() { stopTimer(); stopBreath(); $("urgeOv").classList.remove("on"); }
   $("urgeBtn").addEventListener("click", function () { openUrge(); });
   $("urgeClose").addEventListener("click", closeUrge);
   $("urgeDone").addEventListener("click", function () { state.urges += 1; save(); closeUrge(); render(); });
@@ -816,6 +1764,16 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
     $("setFaith").value = state.faith;
     $("pinOff").style.display = state.pin ? "block" : "none";
     $("pinSave").textContent = state.pin ? t("pinChange") : t("pinOn");
+    $("themeDark").setAttribute("aria-pressed", String(state.theme === "dark"));
+    $("themeLight").setAttribute("aria-pressed", String(state.theme === "light"));
+    renderPalettes();
+    $("apDim").value = state.appear.dim;
+    $("chkWelcome").checked = state.showWelcome !== false;
+    $("chkVibe").checked = state.vibe !== false;
+    $("wallRemove").style.display = state.appear.hasWall ? "block" : "none";
+    $("logoRemove").style.display = state.appear.hasLogo ? "block" : "none";
+    $("apAccent").value = hexOf(state.appear.accent, "--green");
+    $("apDetail").value = hexOf(state.appear.detail, "--sun");
   }
   $("saveSet").addEventListener("click", function () {
     state.name = $("setName").value.trim();
@@ -837,7 +1795,7 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
   /* ---------- bloqueo ---------- */
   function lock() { if (!state.pin) return; $("lockIn").value = ""; $("lockErr").textContent = ""; $("lockOv").classList.add("on"); }
   function tryUnlock() {
-    if (hashPin($("lockIn").value) === state.pin) { $("lockOv").classList.remove("on"); $("lockIn").value = ""; $("lockErr").textContent = ""; }
+    if (hashPin($("lockIn").value) === state.pin) { $("lockOv").classList.remove("on"); setTimeout(render, 0); $("lockIn").value = ""; $("lockErr").textContent = ""; }
     else { $("lockErr").textContent = t("lockErr"); $("lockIn").value = ""; }
   }
   $("lockGo").addEventListener("click", tryUnlock);
@@ -847,16 +1805,487 @@ ul.list li time { display: block; font-size: 13px; color: var(--muted); }
   });
   document.addEventListener("visibilitychange", function () { if (document.hidden) lock(); });
 
-  /* ---------- tema ---------- */
-  $("themeBtn").addEventListener("click", function () {
-    state.theme = state.theme === "dark" ? "light" : "dark";
-    document.documentElement.setAttribute("data-theme", state.theme);
-    save();
+  /* ---------- datos del plan y la apariencia ---------- */
+  var CHIPS = [
+  {
+    "l": {
+      "es": "Mi familia",
+      "en": "My family"
+    },
+    "s": {
+      "es": "Quiero cambiar por mi familia porque ",
+      "en": "I want to change for my family because "
+    }
+  },
+  {
+    "l": {
+      "es": "Mi fe",
+      "en": "My faith"
+    },
+    "s": {
+      "es": "Quiero cambiar por mi fe porque ",
+      "en": "I want to change for my faith because "
+    }
+  },
+  {
+    "l": {
+      "es": "Mi salud",
+      "en": "My health"
+    },
+    "s": {
+      "es": "Quiero cambiar por mi salud porque ",
+      "en": "I want to change for my health because "
+    }
+  },
+  {
+    "l": {
+      "es": "Mi autoestima",
+      "en": "My self-esteem"
+    },
+    "s": {
+      "es": "Quiero cambiar para sentirme bien conmigo porque ",
+      "en": "I want to change so I can feel good about myself because "
+    }
+  },
+  {
+    "l": {
+      "es": "Mi pareja",
+      "en": "My partner"
+    },
+    "s": {
+      "es": "Quiero cambiar por mi pareja porque ",
+      "en": "I want to change for my partner because "
+    }
+  },
+  {
+    "l": {
+      "es": "Mi futuro",
+      "en": "My future"
+    },
+    "s": {
+      "es": "Quiero cambiar por mi futuro porque ",
+      "en": "I want to change for my future because "
+    }
+  }
+];
+  var TRIG = [
+  {
+    "id": "boredom",
+    "es": "Aburrimiento",
+    "en": "Boredom"
+  },
+  {
+    "id": "lonely",
+    "es": "Soledad",
+    "en": "Loneliness"
+  },
+  {
+    "id": "stress",
+    "es": "Estrés",
+    "en": "Stress"
+  },
+  {
+    "id": "tired",
+    "es": "Cansancio",
+    "en": "Tiredness"
+  },
+  {
+    "id": "night",
+    "es": "La noche o la cama",
+    "en": "Night time or bed"
+  },
+  {
+    "id": "phone",
+    "es": "El celular o las redes",
+    "en": "My phone or social media"
+  },
+  {
+    "id": "sad",
+    "es": "Tristeza o ansiedad",
+    "en": "Sadness or anxiety"
+  },
+  {
+    "id": "anger",
+    "es": "Enojo o discusiones",
+    "en": "Anger or arguments"
+  },
+  {
+    "id": "alone",
+    "es": "Estar solo o sola en casa",
+    "en": "Being home alone"
+  }
+];
+  var ACTS = [
+  {
+    "id": "walk",
+    "es": "Salir a caminar",
+    "en": "Go for a walk"
+  },
+  {
+    "id": "water",
+    "es": "Tomar un vaso de agua",
+    "en": "Drink a glass of water"
+  },
+  {
+    "id": "breathe",
+    "es": "Respirar profundo",
+    "en": "Breathe deeply"
+  },
+  {
+    "id": "pray",
+    "es": "Orar o meditar",
+    "en": "Pray or meditate"
+  },
+  {
+    "id": "call",
+    "es": "Llamar a alguien de confianza",
+    "en": "Call someone I trust"
+  },
+  {
+    "id": "journal",
+    "es": "Escribir en mi diario",
+    "en": "Write in my journal"
+  },
+  {
+    "id": "exercise",
+    "es": "Hacer ejercicio",
+    "en": "Exercise"
+  },
+  {
+    "id": "shower",
+    "es": "Darme una ducha tibia",
+    "en": "Take a warm shower"
+  },
+  {
+    "id": "leave",
+    "es": "Salir de la habitación",
+    "en": "Leave the room"
+  },
+  {
+    "id": "music",
+    "es": "Escuchar música tranquila",
+    "en": "Listen to calm music"
+  }
+];
+  var PALETTES = {
+  "oceano": {
+    "dark": {
+      "bg": "#0f1517",
+      "surface": "#172023",
+      "line": "#25343a",
+      "green": "#6a9bb0",
+      "ink": "#0c1418",
+      "sun": "#c0a064",
+      "soft": "#2a2719"
+    },
+    "light": {
+      "bg": "#e2e8ea",
+      "surface": "#ecf0f1",
+      "line": "#c8d2d5",
+      "green": "#3b6475",
+      "ink": "#eef3f5",
+      "sun": "#a9803f",
+      "soft": "#e3d8bd"
+    }
+  },
+  "atardecer": {
+    "dark": {
+      "bg": "#17120f",
+      "surface": "#211a16",
+      "line": "#34282a",
+      "green": "#b98062",
+      "ink": "#170f0a",
+      "sun": "#c9a15a",
+      "soft": "#30241a"
+    },
+    "light": {
+      "bg": "#ebe4dc",
+      "surface": "#f3eee7",
+      "line": "#d6cabe",
+      "green": "#8a533a",
+      "ink": "#f6efe8",
+      "sun": "#a8793a",
+      "soft": "#e5d3b0"
+    }
+  },
+  "violeta": {
+    "dark": {
+      "bg": "#131119",
+      "surface": "#1b1822",
+      "line": "#2c2837",
+      "green": "#8d86b8",
+      "ink": "#100e16",
+      "sun": "#b79a6e",
+      "soft": "#2a2418"
+    },
+    "light": {
+      "bg": "#e6e4ec",
+      "surface": "#eeedf3",
+      "line": "#d0cddb",
+      "green": "#5a5388",
+      "ink": "#f1f0f6",
+      "sun": "#a07f48",
+      "soft": "#e2d6bb"
+    }
+  },
+  "piedra": {
+    "dark": {
+      "bg": "#141414",
+      "surface": "#1d1d1d",
+      "line": "#2e2e2e",
+      "green": "#9aa3a0",
+      "ink": "#121212",
+      "sun": "#b0a58f",
+      "soft": "#26231c"
+    },
+    "light": {
+      "bg": "#e7e7e5",
+      "surface": "#efefed",
+      "line": "#d3d3d0",
+      "green": "#4a5551",
+      "ink": "#f2f2f0",
+      "sun": "#8f8468",
+      "soft": "#dcd6c6"
+    }
+  }
+};
+  var SWATCH = {
+  "bosque": "#6b9780",
+  "oceano": "#6a9bb0",
+  "atardecer": "#b98062",
+  "violeta": "#8d86b8",
+  "piedra": "#9aa3a0"
+};
+  var PAL_ORDER = ["bosque", "oceano", "atardecer", "violeta", "piedra"];
+
+  function goTab(name) { var b = document.querySelector('nav.tabs button[data-v="' + name + '"]'); if (b) b.click(); }
+  function actLabel(id) { for (var i = 0; i < ACTS.length; i++) if (ACTS[i].id === id) return ACTS[i][state.lang]; return ""; }
+
+  /* ---------- razones: ideas para empezar ---------- */
+  function renderReasonChips() {
+    var box = $("reasonChips"); box.innerHTML = "";
+    CHIPS.forEach(function (c) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = c.l[state.lang];
+      b.addEventListener("click", function () {
+        var ta = $("reasonIn"); ta.value = c.s[state.lang]; ta.focus();
+        try { ta.setSelectionRange(ta.value.length, ta.value.length); } catch (e) {}
+      });
+      box.appendChild(b);
+    });
+  }
+  $("goPlan").addEventListener("click", function () { goTab("plan"); });
+
+  /* ---------- mi plan personal ---------- */
+  function planChips(list, boxId, arr) {
+    var box = $(boxId); box.innerHTML = "";
+    list.forEach(function (it) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = it[state.lang];
+      b.setAttribute("aria-pressed", String(arr.indexOf(it.id) !== -1));
+      b.addEventListener("click", function () {
+        var i = arr.indexOf(it.id); if (i === -1) arr.push(it.id); else arr.splice(i, 1);
+        save(); b.setAttribute("aria-pressed", String(i === -1));
+      });
+      box.appendChild(b);
+    });
+  }
+  function renderPlan() {
+    var pl = state.plan, why = $("planWhy"); why.innerHTML = "";
+    if (state.reasons.length) {
+      var p = document.createElement("p"); p.className = "faithline"; p.textContent = state.reasons[state.reasons.length - 1]; why.appendChild(p);
+    } else {
+      var p0 = document.createElement("p"); p0.textContent = t("planNoWhy"); why.appendChild(p0);
+      var gb = document.createElement("button"); gb.type = "button"; gb.className = "btn ghost"; gb.style.marginTop = "8px"; gb.textContent = t("planNoWhyBtn");
+      gb.addEventListener("click", function () { goTab("razones"); }); why.appendChild(gb);
+    }
+    planChips(TRIG, "planTrig", pl.triggers);
+    planChips(ACTS, "planActs", pl.actions);
+    if (document.activeElement !== $("planName")) $("planName").value = pl.name || "";
+    if (document.activeElement !== $("planPhone")) $("planPhone").value = pl.phone || "";
+    if (document.activeElement !== $("planPledge")) $("planPledge").value = pl.pledge || "";
+  }
+  $("planSave").addEventListener("click", function () {
+    var pl = state.plan;
+    pl.name = $("planName").value.trim(); pl.phone = $("planPhone").value.trim(); pl.pledge = $("planPledge").value.trim();
+    save(); $("planMsg").textContent = t("planSaved");
+    setTimeout(function () { $("planMsg").textContent = ""; }, 2500);
   });
+
+  /* ---------- respiración guiada (4 s inhala, 6 s exhala) ---------- */
+  var breathId = null, bsec = 0;
+  function calmMotion() { return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
+  function buzz(pattern) { try { if (state.vibe !== false && navigator.vibrate) navigator.vibrate(pattern); } catch (e) {} }
+  function breathStep() {
+    var el = $("breath"), inhale = bsec < 4;
+    if (bsec === 0) {
+      el.style.transition = calmMotion() ? "none" : "transform 4s ease-in-out"; el.style.transform = "scale(1.05)";
+      $("breathLbl").textContent = t("breatheIn"); $("breathLive").textContent = t("breatheIn"); buzz(30);
+    } else if (bsec === 4) {
+      el.style.transition = calmMotion() ? "none" : "transform 6s ease-in-out"; el.style.transform = "scale(.7)";
+      $("breathLbl").textContent = t("breatheOut"); $("breathLive").textContent = t("breatheOut"); buzz([30, 120, 30]);
+    }
+    $("breathCnt").textContent = inhale ? (4 - bsec) : (10 - bsec);
+    bsec = (bsec + 1) % 10;
+  }
+  function stopBreath() { if (breathId) { clearInterval(breathId); breathId = null; } }
+  function startBreath() {
+    stopBreath(); bsec = 0;
+    var el = $("breath"); el.style.transition = "none"; el.style.transform = "scale(.7)"; void el.offsetWidth;
+    breathStep(); breathId = setInterval(breathStep, 1000);
+  }
+
+  /* ---------- imágenes guardadas en el teléfono (IndexedDB) ---------- */
+  function dbOpen() {
+    return new Promise(function (res, rej) {
+      if (!window.indexedDB) { rej(new Error("sin IndexedDB")); return; }
+      var r = indexedDB.open("refugio-media", 1);
+      r.onupgradeneeded = function () { r.result.createObjectStore("img"); };
+      r.onsuccess = function () { res(r.result); };
+      r.onerror = function () { rej(r.error); };
+    });
+  }
+  function dbDo(mode, fn) {
+    return dbOpen().then(function (db) {
+      return new Promise(function (res, rej) {
+        var tx = db.transaction("img", mode), store = tx.objectStore("img"), out = fn(store);
+        tx.oncomplete = function () { res(out && out.result !== undefined ? out.result : null); db.close(); };
+        tx.onerror = function () { rej(tx.error); db.close(); };
+      });
+    });
+  }
+  function dbPut(k, blob) { return dbDo("readwrite", function (s) { return s.put(blob, k); }); }
+  function dbGet(k) { return dbDo("readonly", function (s) { return s.get(k); }); }
+  function dbDel(k) { return dbDo("readwrite", function (s) { return s.delete(k); }); }
+  function dbClear() { try { dbDo("readwrite", function (s) { return s.clear(); }).catch(function () {}); } catch (e) {} }
+
+  function shrink(file, max, type, q) {
+    return new Promise(function (res, rej) {
+      var url = URL.createObjectURL(file), im = new Image();
+      im.onload = function () {
+        var sc = Math.min(1, max / Math.max(im.naturalWidth, im.naturalHeight));
+        var c = document.createElement("canvas"); c.width = Math.max(1, Math.round(im.naturalWidth * sc)); c.height = Math.max(1, Math.round(im.naturalHeight * sc));
+        c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+        c.toBlob(function (b) { b ? res(b) : rej(new Error("blob")); }, type, q);
+      };
+      im.onerror = function () { URL.revokeObjectURL(url); rej(new Error("img")); };
+      im.src = url;
+    });
+  }
+
+  var wallUrl = null, logoUrl = null;
+  var DEFAULT_LOGO = '<svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="11" fill="#111613"/><path d="M11 31a13 13 0 0 1 26 0z" fill="#b38a52"/><rect x="8" y="33" width="32" height="2.4" rx="1.2" fill="#c4ccc0"/><g stroke="#96784c" stroke-width="2" stroke-linecap="round"><path d="M24 11v4"/><path d="M12.5 15.5l2.8 2.8"/><path d="M35.5 15.5l-2.8 2.8"/></g></svg>';
+  function freeMedia() {
+    if (wallUrl) { URL.revokeObjectURL(wallUrl); wallUrl = null; }
+    if (logoUrl) { URL.revokeObjectURL(logoUrl); logoUrl = null; }
+    $("wall").style.backgroundImage = "";
+  }
+  function applyLogo() {
+    [$("logoBox"), $("splashLogo")].forEach(function (el) {
+      el.innerHTML = "";
+      if (state.appear.hasLogo && logoUrl) { var im = document.createElement("img"); im.src = logoUrl; im.alt = ""; el.appendChild(im); }
+      else el.innerHTML = DEFAULT_LOGO;
+    });
+  }
+  function setWall(blob) {
+    if (wallUrl) URL.revokeObjectURL(wallUrl);
+    wallUrl = blob ? URL.createObjectURL(blob) : null;
+    $("wall").style.backgroundImage = wallUrl ? 'url("' + wallUrl + '")' : "";
+    applyAppearance();
+  }
+  function setLogo(blob) {
+    if (logoUrl) URL.revokeObjectURL(logoUrl);
+    logoUrl = blob ? URL.createObjectURL(blob) : null;
+    applyLogo();
+  }
+  function loadMedia() {
+    if (state.appear.hasWall) dbGet("wall").then(function (b) { if (b) setWall(b); else { state.appear.hasWall = false; save(); } }).catch(function () {});
+    if (state.appear.hasLogo) dbGet("logo").then(function (b) { if (b) setLogo(b); else { state.appear.hasLogo = false; save(); } }).catch(function () {});
+  }
+  function say(msg) { $("apMsg").textContent = msg; setTimeout(function () { $("apMsg").textContent = ""; }, 3000); }
+  function pickImage(btnId, fileId, key, max, type, q, done) {
+    $(btnId).addEventListener("click", function () { $(fileId).click(); });
+    $(fileId).addEventListener("change", function () {
+      var f = this.files && this.files[0]; this.value = "";
+      if (!f) return;
+      if (!/^image\//.test(f.type) || f.size > 25 * 1024 * 1024) { say(t("apImgErr")); return; }
+      shrink(f, max, type, q)
+        .then(function (b) { return dbPut(key, b).then(function () { return b; }); })
+        .then(function (b) { done(b); say(t("apSaved")); try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {} })
+        .catch(function () { say(t("apImgErr")); });
+    });
+  }
+  pickImage("wallAdd", "wallFile", "wall", 1280, "image/jpeg", 0.82, function (b) { state.appear.hasWall = true; save(); setWall(b); syncSettings(); });
+  pickImage("logoAdd", "logoFile", "logo", 256, "image/png", 0.92, function (b) { state.appear.hasLogo = true; save(); setLogo(b); syncSettings(); });
+  $("wallRemove").addEventListener("click", function () { dbDel("wall").catch(function () {}); state.appear.hasWall = false; save(); setWall(null); syncSettings(); });
+  $("logoRemove").addEventListener("click", function () { dbDel("logo").catch(function () {}); state.appear.hasLogo = false; save(); setLogo(null); syncSettings(); });
+
+  /* ---------- colores ---------- */
+  function hexToRgb(h) { h = h.replace("#", ""); var n = parseInt(h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  function inkFor(h) { var c = hexToRgb(h); return (0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]) > 150 ? "#0e1511" : "#f4f7ee"; }
+  function hexOf(custom, cssVar) {
+    if (/^#[0-9a-f]{6}$/i.test(custom || "")) return custom;
+    var v = (getComputedStyle(document.documentElement).getPropertyValue(cssVar) || "").trim();
+    return /^#[0-9a-f]{6}$/i.test(v) ? v : "#6b9780";
+  }
+  function applyAppearance() {
+    var root = document.documentElement, ap = state.appear, mode = state.theme;
+    ["--bg", "--surface", "--line", "--green", "--green-ink", "--sun", "--sun-soft"].forEach(function (v) { root.style.removeProperty(v); });
+    var pal = PALETTES[ap.palette];
+    if (pal) {
+      var c = pal[mode];
+      root.style.setProperty("--bg", c.bg); root.style.setProperty("--surface", c.surface); root.style.setProperty("--line", c.line);
+      root.style.setProperty("--green", c.green); root.style.setProperty("--green-ink", c.ink);
+      root.style.setProperty("--sun", c.sun); root.style.setProperty("--sun-soft", c.soft);
+    }
+    if (/^#[0-9a-f]{6}$/i.test(ap.accent || "")) { root.style.setProperty("--green", ap.accent); root.style.setProperty("--green-ink", inkFor(ap.accent)); }
+    if (/^#[0-9a-f]{6}$/i.test(ap.detail || "")) { var r = hexToRgb(ap.detail); root.style.setProperty("--sun", ap.detail); root.style.setProperty("--sun-soft", "rgba(" + r.join(",") + ",.22)"); }
+    root.style.setProperty("--wallrgb", mode === "dark" ? "0,0,0" : "255,255,255");
+    root.style.setProperty("--walldim", String((ap.dim || 0) / 100));
+    root.classList.toggle("has-wall", !!(ap.hasWall && wallUrl));
+  }
+  function renderPalettes() {
+    var box = $("apPalettes"); box.innerHTML = "";
+    PAL_ORDER.forEach(function (k) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.setAttribute("aria-pressed", String(state.appear.palette === k));
+      var d = document.createElement("span"); d.className = "dotc"; d.style.background = SWATCH[k]; b.appendChild(d);
+      b.appendChild(document.createTextNode(t("pal_" + k)));
+      b.addEventListener("click", function () { state.appear.palette = k; state.appear.accent = ""; state.appear.detail = ""; save(); applyAppearance(); syncSettings(); });
+      box.appendChild(b);
+    });
+  }
+  function setTheme(mode) { state.theme = mode; document.documentElement.setAttribute("data-theme", mode); save(); applyAppearance(); syncSettings(); }
+  $("themeDark").addEventListener("click", function () { setTheme("dark"); });
+  $("themeLight").addEventListener("click", function () { setTheme("light"); });
+  $("apAccent").addEventListener("input", function () { state.appear.accent = this.value; save(); applyAppearance(); });
+  $("apDetail").addEventListener("input", function () { state.appear.detail = this.value; save(); applyAppearance(); });
+  $("apReset").addEventListener("click", function () { state.appear.palette = "bosque"; state.appear.accent = ""; state.appear.detail = ""; save(); applyAppearance(); syncSettings(); });
+  $("apDim").addEventListener("input", function () { state.appear.dim = +this.value; save(); applyAppearance(); });
+  $("chkWelcome").addEventListener("change", function () { state.showWelcome = this.checked; save(); });
+  $("chkVibe").addEventListener("change", function () { state.vibe = this.checked; save(); if (this.checked) buzz(30); });
+
+  /* ---------- configuración ---------- */
+  $("settingsBtn").addEventListener("click", function () { syncSettings(); $("setOv").classList.add("on"); });
+  $("setClose").addEventListener("click", function () { $("setOv").classList.remove("on"); });
+
+  /* ---------- bienvenida al abrir la app ---------- */
+  function openSplash() {
+    if (state.showWelcome === false) return;
+    $("wsTitle").textContent = nm() ? t("wsTitleN", { n: nm() }) : t("wsTitle");
+    $("wsMsg").textContent = t("wsMsg"); $("wsMsg2").textContent = t("wsMsg2");
+    var vb = $("wsVerse"); vb.innerHTML = "";
+    var list = FAITHS[state.faith].phrases, p = list[new Date().getDate() % list.length][state.lang];
+    var vp = document.createElement("p"); vp.className = "faithline"; vp.textContent = withName(p[0]); vb.appendChild(vp);
+    if (p[1]) { var rp = document.createElement("p"); rp.className = "small"; rp.textContent = p[1]; vb.appendChild(rp); }
+    $("welcomeOv").classList.add("on");
+  }
+  $("wsGo").addEventListener("click", function () { $("welcomeOv").classList.remove("on"); window.scrollTo(0, 0); });
 
   if ("serviceWorker" in navigator) { window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); }); }
   load();
+  applyAppearance();
+  loadMedia();
+  applyLogo();
   applyLang();
+  openSplash();
   lock();
 })();
 </script>
